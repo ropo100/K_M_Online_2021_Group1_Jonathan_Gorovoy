@@ -6,4 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".WeekCalendarActivity">
 
+    <Button
+        android:id="@+id/button91"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="168dp"
+        android:text="@string/month_calendar_screen"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button92"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="108dp"
+        android:text="@string/past_day_screen"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toEndOf="@+id/button91"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="@+id/button91"
+        app:layout_constraintTop_toBottomOf="@+id/button91" />
+
+    <Button
+        android:id="@+id/button93"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="108dp"
+        android:text="@string/modify_day_screen"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toEndOf="@+id/button92"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="@+id/button92"
+        app:layout_constraintTop_toBottomOf="@+id/button92" />
 </androidx.constraintlayout.widget.ConstraintLayout>

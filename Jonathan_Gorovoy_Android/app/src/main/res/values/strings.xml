@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Jonathan_Gorovoy_Android</string>
+    <string name="main_screen">Welcome Screen</string>
+    <string name="modify_day_screen">Modify/View Day Screen</string>
+    <string name="modify_event_screen">Modify/View Event Screen</string>
+    <string name="modify_routine_screen">Modify/View Daily Routine Screen</string>
+    <string name="month_calendar_screen">Monthly Calendar Screen</string>
+    <string name="past_day_screen">Past Day Screen</string>
+    <string name="settings_screen">Settings Screen</string>
+    <string name="view_deadlines_screen">View Deadlines Screen</string>
+    <string name="view_routines_screen">View Daily Routines Screen</string>
+    <string name="week_calendar_screen">Weekly Calendar Screen</string>
 </resources>

@@ -4,28 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MonthCalendarActivity">
+    tools:context=".ModifyRoutineActivity">
 
     <Button
-        android:id="@+id/button41"
+        android:id="@+id/button31"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="204dp"
-        android:text="@string/main_screen"
+        android:layout_marginTop="340dp"
+        android:text="@string/modify_event_screen"
         android:onClick="onClick"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button42"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="152dp"
-        android:text="@string/week_calendar_screen"
-        android:onClick="onClick"
-        app:layout_constraintEnd_toEndOf="@+id/button41"
-        app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="@+id/button41"
-        app:layout_constraintTop_toBottomOf="@+id/button41" />
 </androidx.constraintlayout.widget.ConstraintLayout>

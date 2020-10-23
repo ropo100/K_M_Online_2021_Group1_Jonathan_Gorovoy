@@ -6,4 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".ViewRoutinesActivity">
 
+    <Button
+        android:id="@+id/button81"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="180dp"
+        android:text="@string/main_screen"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button82"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="184dp"
+        android:text="@string/modify_routine_screen"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toEndOf="@+id/button81"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="@+id/button81"
+        app:layout_constraintTop_toBottomOf="@+id/button81" />
 </androidx.constraintlayout.widget.ConstraintLayout>
