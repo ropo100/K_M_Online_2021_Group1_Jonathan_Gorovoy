@@ -10,10 +10,11 @@
         android:id="@+id/button71"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
-        android:text="@string/main_screen"
+        android:layout_marginTop="28dp"
         android:onClick="onClick"
+        android:text="@string/main_screen"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.17"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,11 +22,20 @@
         android:id="@+id/button72"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="184dp"
-        android:text="@string/modify_event_screen"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="46dp"
         android:onClick="onClick"
+        android:text="@string/modify_event_screen"
         app:layout_constraintEnd_toEndOf="@+id/button71"
-        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/button71"
         app:layout_constraintTop_toBottomOf="@+id/button71" />
+
+    <ListView
+        android:layout_width="404dp"
+        android:layout_height="623dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,10 +10,11 @@
         android:id="@+id/button41"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="204dp"
-        android:text="@string/main_screen"
+        android:layout_marginTop="32dp"
         android:onClick="onClick"
+        android:text="@string/main_screen"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.066"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,11 +22,30 @@
         android:id="@+id/button42"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="152dp"
-        android:text="@string/week_calendar_screen"
+        android:layout_marginTop="192dp"
         android:onClick="onClick"
+        android:text="@string/week_calendar_screen"
         app:layout_constraintEnd_toEndOf="@+id/button41"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/button41"
         app:layout_constraintTop_toBottomOf="@+id/button41" />
+
+    <GridView
+        android:layout_width="412dp"
+        android:layout_height="552dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/monthName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="April"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/button41"
+        app:layout_constraintStart_toEndOf="@+id/button41"
+        app:layout_constraintTop_toTopOf="@+id/button41"
+        app:layout_constraintVertical_bias="0.437" />
 </androidx.constraintlayout.widget.ConstraintLayout>

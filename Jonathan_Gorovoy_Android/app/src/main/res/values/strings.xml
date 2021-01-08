@@ -10,4 +10,12 @@
     <string name="view_deadlines_screen">View Deadlines Screen</string>
     <string name="view_routines_screen">View Daily Routines Screen</string>
     <string name="week_calendar_screen">Weekly Calendar Screen</string>
+
+    <string name="welcome_msg">Welcome to your Daily Routine Manager</string>
+    <string name="titleText">Title:</string>
+    <string name="descriptionText">Description:</string>
+    <string name="eventStartText">Start time:</string>
+    <string name="eventEndText">End time:</string>
+    <string name="eventDueText">Due date:</string>
+    <string name="settingsText">Settings</string>
 </resources>

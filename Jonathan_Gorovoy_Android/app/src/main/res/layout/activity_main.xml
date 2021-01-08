@@ -8,47 +8,61 @@
 
     <Button
         android:id="@+id/button01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
-        android:text="@string/settings_screen"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginStart="16dp"
         android:onClick="onClick"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/settings_screen"
+        app:layout_constraintBottom_toBottomOf="@+id/button04"
+        app:layout_constraintStart_toEndOf="@+id/button04"
+        app:layout_constraintTop_toTopOf="@+id/button04"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/button02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:text="@string/view_deadlines_screen"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginStart="16dp"
         android:onClick="onClick"
-        app:layout_constraintEnd_toEndOf="@+id/button01"
-        app:layout_constraintStart_toStartOf="@+id/button01"
-        app:layout_constraintTop_toBottomOf="@+id/button01" />
+        android:text="@string/view_deadlines_screen"
+        app:layout_constraintBottom_toBottomOf="@+id/button03"
+        app:layout_constraintStart_toEndOf="@+id/button03"
+        app:layout_constraintTop_toTopOf="@+id/button03"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/button03"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:text="@string/view_routines_screen"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="196dp"
         android:onClick="onClick"
-        app:layout_constraintEnd_toEndOf="@+id/button02"
-        app:layout_constraintHorizontal_bias="0.564"
-        app:layout_constraintStart_toStartOf="@+id/button02"
-        app:layout_constraintTop_toBottomOf="@+id/button02" />
+        android:text="@string/view_routines_screen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeText" />
 
     <Button
         android:id="@+id/button04"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:text="@string/month_calendar_screen"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="8dp"
         android:onClick="onClick"
+        android:text="@string/month_calendar_screen"
         app:layout_constraintEnd_toEndOf="@+id/button03"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/button03"
         app:layout_constraintTop_toBottomOf="@+id/button03" />
+
+    <TextView
+        android:id="@+id/welcomeText"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="48dp"
+        android:text="@string/welcome_msg"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
