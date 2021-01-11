@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/eventEndHour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="00:00"
+        app:layout_constraintEnd_toEndOf="@+id/eventBetweenTimes"
+        app:layout_constraintHorizontal_bias="0.56"
+        app:layout_constraintStart_toStartOf="@+id/eventBetweenTimes"
+        app:layout_constraintTop_toBottomOf="@+id/eventBetweenTimes" />
+
+    <TextView
+        android:id="@+id/eventBetweenTimes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toInBetween"
+        app:layout_constraintEnd_toEndOf="@+id/eventStartHour"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="@+id/eventStartHour"
+        app:layout_constraintTop_toBottomOf="@+id/eventStartHour" />
+
+    <TextView
+        android:id="@+id/eventStartHour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
+        android:text="00:00"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/eventTitle"
+        android:layout_width="342dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="12dp"
+        android:text="Title"
+        app:layout_constraintBottom_toTopOf="@+id/eventBetweenTimes"
+        app:layout_constraintStart_toEndOf="@+id/eventStartHour"
+        app:layout_constraintTop_toTopOf="@+id/eventStartHour"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/eventDescription"
+        android:layout_width="342dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="4dp"
+        android:text="Description"
+        app:layout_constraintEnd_toEndOf="@+id/eventTitle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/eventTitle"
+        app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
+</androidx.constraintlayout.widget.ConstraintLayout>

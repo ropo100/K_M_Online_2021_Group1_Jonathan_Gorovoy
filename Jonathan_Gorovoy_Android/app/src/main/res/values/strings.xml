@@ -18,4 +18,5 @@
     <string name="eventEndText">End time:</string>
     <string name="eventDueText">Due date:</string>
     <string name="settingsText">Settings</string>
+    <string name="toInBetween">to</string>
 </resources>
