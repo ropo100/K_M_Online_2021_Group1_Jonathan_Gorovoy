@@ -1,4 +1,4 @@
-package com.example.jonathan_gorovoy_android;
+package com.example.jonathan_gorovoy_android.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.jonathan_gorovoy_android.classes.EventDayView;
+import com.example.jonathan_gorovoy_android.R;
 
 import java.util.List;
 

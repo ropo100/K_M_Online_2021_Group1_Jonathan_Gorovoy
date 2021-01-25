@@ -1,4 +1,4 @@
-package com.example.jonathan_gorovoy_android;
+package com.example.jonathan_gorovoy_android.classes;
 
 public class EventDayView { // class for an event in the view of days in particular
     private String startHour;

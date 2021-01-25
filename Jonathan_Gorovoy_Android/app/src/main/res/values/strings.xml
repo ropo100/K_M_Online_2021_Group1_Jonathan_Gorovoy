@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Jonathan_Gorovoy_Android</string>
+    <string name="app_name">Daily Routine Manager</string>
     <string name="main_screen">Welcome Screen</string>
     <string name="modify_day_screen">Modify/View Day Screen</string>
     <string name="modify_event_screen">Modify/View Event Screen</string>
