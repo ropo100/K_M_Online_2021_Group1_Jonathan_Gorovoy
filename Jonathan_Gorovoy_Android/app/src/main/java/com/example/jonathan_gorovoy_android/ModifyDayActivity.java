@@ -14,6 +14,7 @@ import com.example.jonathan_gorovoy_android.adapters.EventDayViewAdapter;
 import com.example.jonathan_gorovoy_android.classes.EventDayView;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 public class ModifyDayActivity extends AppCompatActivity {
 
@@ -49,11 +50,17 @@ public class ModifyDayActivity extends AppCompatActivity {
 
     public void getEventsDemo()
     {
+        year = 2019;
+        month = 8;
+        day = 25;
         EventDayView ev = new EventDayView("15:00", "16:30", "Walk dog out", "Take dog out for a walk around the park");
+        ev.setInPast(year, month, day, true, GregorianCalendar.getInstance().getTime());
         eventArray.add(ev);
         ev = new EventDayView("16:30", "17:00", "Lunch", "Grab lunch from the fridge");
+        ev.setInPast(2021, month, day, true, GregorianCalendar.getInstance().getTime());
         eventArray.add(ev);
         ev = new EventDayView("17:20", "18:00", "Watch Lesson", "Watch the lesson recorded by math teacher in preparation for the test");
+        ev.setInPastValue(true);
         eventArray.add(ev);
         ev = new EventDayView("18:00", "19:30", "Code Android project", "Add new adapter view to android project xml file");
         eventArray.add(ev);

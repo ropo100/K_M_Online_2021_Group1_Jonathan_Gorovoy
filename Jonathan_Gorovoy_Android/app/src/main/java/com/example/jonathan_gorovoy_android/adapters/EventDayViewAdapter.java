@@ -1,6 +1,7 @@
 package com.example.jonathan_gorovoy_android.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,10 @@ public class EventDayViewAdapter extends ArrayAdapter<EventDayView>
         title.setText(ev.getTitle());
         TextView description = view.findViewById(R.id.eventDescription);
         description.setText(ev.getDescription());
+        if(ev.getInPast())
+        {
+            view.setBackgroundColor(Color.GRAY);
+        }
         return view;
     }
 

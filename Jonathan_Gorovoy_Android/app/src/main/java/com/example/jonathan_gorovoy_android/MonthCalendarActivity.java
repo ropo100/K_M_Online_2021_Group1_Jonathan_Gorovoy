@@ -8,6 +8,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.example.jonathan_gorovoy_android.classes.CalendarView2;
+
+import java.util.Date;
 
 public class MonthCalendarActivity extends AppCompatActivity {
 
@@ -23,6 +28,20 @@ public class MonthCalendarActivity extends AppCompatActivity {
         if(ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
         }
+
+        CalendarView2 cv = ((CalendarView2)findViewById(R.id.calendarView));
+
+        cv.setEventHandler(new CalendarView2.EventHandler() {
+            @Override
+            public void onDayPress(Date date) {
+                Toast.makeText(MonthCalendarActivity.this, date.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onWeekLongPress(Date date) {
+                Toast.makeText(MonthCalendarActivity.this, date.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
 
         btn1=(Button)findViewById(R.id.button41);
         btn2=(Button)findViewById(R.id.button42);
