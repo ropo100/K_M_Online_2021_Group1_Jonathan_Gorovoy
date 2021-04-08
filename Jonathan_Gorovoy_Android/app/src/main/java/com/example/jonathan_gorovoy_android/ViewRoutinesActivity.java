@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -38,6 +39,18 @@ public class ViewRoutinesActivity extends AppCompatActivity {
         getRoutinesDemo();
         ArrayAdapter<String> sa = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, routineArray);
         routineList.setAdapter(sa);
+        AdapterView.OnItemClickListener routineListListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String routineName = routineArray.get(position);
+                //TODO: query database with routineName and only "days" that are routines (AND isRoutine or isSpecificDay or some form of field like that as true) to get the index of that routine among the routines
+                Intent i = new Intent(ViewRoutinesActivity.this, ModifyDayActivity.class);
+                i.putExtra("source_activity", "activity_view_routines");
+                i.putExtra("routineIndex", routineIndex);
+                startActivity(i);
+            }
+        };
+        routineList.setOnItemClickListener(routineListListener);
 
         btn1.setOnClickListener(this::onClick);
         btn2.setOnClickListener(this::onClick);
@@ -58,7 +71,7 @@ public class ViewRoutinesActivity extends AppCompatActivity {
 
 
     public void onClick(View view) {
-        Intent i;
+        /*Intent i;
         switch(view.getId()) {
             case R.id.button81:
                 i = new Intent(this, MainActivity.class);
@@ -68,10 +81,10 @@ public class ViewRoutinesActivity extends AppCompatActivity {
             case R.id.button82:
                 i = new Intent(this, ModifyRoutineActivity.class);
                 i.putExtra("source_activity", "activity_view_routines");
-                i.putExtra("eventIndex", routineIndex);
+                i.putExtra("routineIndex", routineIndex);
                 startActivity(i);
                 break;
-        }
+        }*/
     }
 
     @Override

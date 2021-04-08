@@ -3,6 +3,7 @@ package com.example.jonathan_gorovoy_android;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.jonathan_gorovoy_android.classes.CalendarView2;
 
+import java.time.Month;
+import java.util.Calendar;
 import java.util.Date;
 
 public class MonthCalendarActivity extends AppCompatActivity {
@@ -24,6 +27,14 @@ public class MonthCalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_month_calendar);
 
+        Intent intent = getIntent();
+        String sourceActivity = intent.getStringExtra("source_activity");
+        if(sourceActivity.equals("activity_week_calendar"))
+        {
+            year = intent.getIntExtra("year", 2000);
+            month = intent.getIntExtra("month", 1);
+        }
+
         ActionBar ab = getSupportActionBar();
         if(ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
@@ -35,11 +46,28 @@ public class MonthCalendarActivity extends AppCompatActivity {
             @Override
             public void onDayPress(Date date) {
                 Toast.makeText(MonthCalendarActivity.this, date.toString(), Toast.LENGTH_LONG).show();
+                Calendar dateCal = Calendar.getInstance();
+                dateCal.setTime(date);
+                Intent i = new Intent(MonthCalendarActivity.this, ModifyDayActivity.class);
+                i.putExtra("source_activity", "activity_month_calendar");
+                i.putExtra("year", dateCal.get(Calendar.YEAR));
+                i.putExtra("month", dateCal.get(Calendar.MONTH));
+                i.putExtra("rowInMonth", dateCal.get(Calendar.WEEK_OF_MONTH));
+                i.putExtra("day", dateCal.get(Calendar.DAY_OF_MONTH));
+                startActivity(i);
             }
 
             @Override
             public void onWeekLongPress(Date date) {
                 Toast.makeText(MonthCalendarActivity.this, date.toString(), Toast.LENGTH_LONG).show();
+                Calendar dateCal = Calendar.getInstance();
+                dateCal.setTime(date);
+                Intent i = new Intent(MonthCalendarActivity.this, WeekCalendarActivity.class);
+                i.putExtra("source_activity", "activity_month_calendar");
+                i.putExtra("year", dateCal.get(Calendar.YEAR));
+                i.putExtra("month", dateCal.get(Calendar.MONTH));
+                i.putExtra("rowInMonth", dateCal.get(Calendar.WEEK_OF_MONTH));
+                startActivity(i);
             }
         });
 
@@ -51,6 +79,7 @@ public class MonthCalendarActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
+        /*
         Intent i;
         switch(view.getId())
         {
@@ -68,6 +97,7 @@ public class MonthCalendarActivity extends AppCompatActivity {
                 startActivity(i);
                 break;
         }
+        */
     }
 
     @Override

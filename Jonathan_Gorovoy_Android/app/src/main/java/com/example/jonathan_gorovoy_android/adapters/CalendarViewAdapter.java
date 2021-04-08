@@ -62,6 +62,10 @@ public class CalendarViewAdapter extends ArrayAdapter<Date> {
             // if day is today, change background to green
             view.setBackgroundColor(getContext().getResources().getColor(R.color.green_light, null));
         }
+        else if (day != calendarToday.get(Calendar.DATE))
+        {
+            view.setBackgroundColor(getContext().getResources().getColor(R.color.white, null));
+        }
 
         // set actual text to number of date in question
         ((TextView)view).setText(String.valueOf(calendar.get(Calendar.DATE)));

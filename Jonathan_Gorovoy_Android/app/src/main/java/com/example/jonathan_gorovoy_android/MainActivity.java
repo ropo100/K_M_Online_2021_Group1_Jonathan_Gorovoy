@@ -18,13 +18,12 @@ public class MainActivity extends AppCompatActivity {
         btn2=(Button)findViewById(R.id.button02);
         btn3=(Button)findViewById(R.id.button03);
         btn4=(Button)findViewById(R.id.button04);
-
+ 
         btn1.setOnClickListener(this::onClick);
         btn2.setOnClickListener(this::onClick);
         btn3.setOnClickListener(this::onClick);
         btn4.setOnClickListener(this::onClick);
     }
-
     public void onClick(View view) {
         Intent i;
         switch(view.getId())

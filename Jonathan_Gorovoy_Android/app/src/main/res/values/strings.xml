@@ -19,4 +19,5 @@
     <string name="eventDueText">Due date:</string>
     <string name="settingsText">Settings</string>
     <string name="toInBetween">to</string>
+    <string name="multiUseApply">Apply</string>
 </resources>

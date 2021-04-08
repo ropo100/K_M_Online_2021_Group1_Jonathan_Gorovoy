@@ -13,7 +13,8 @@ public class ModifyRoutineActivity extends AppCompatActivity {
 
     Button btn1;
     Button btn2;
-    int eventIndex, isSpecificDay;
+    int eventIndex;
+    boolean isSpecificDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

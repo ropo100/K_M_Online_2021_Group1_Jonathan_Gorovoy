@@ -30,14 +30,14 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
-        Intent i;
+        /*Intent i;
         switch(view.getId()) {
             case R.id.button61:
                 i = new Intent(this, MainActivity.class);
                 i.putExtra("source_activity", "activity_settings");
                 startActivity(i);
                 break;
-        }
+        }*/
     }
 
 

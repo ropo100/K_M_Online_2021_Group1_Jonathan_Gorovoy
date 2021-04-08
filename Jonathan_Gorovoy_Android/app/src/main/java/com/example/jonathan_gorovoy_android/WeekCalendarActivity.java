@@ -19,6 +19,13 @@ public class WeekCalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_calendar);
 
+        Intent intent = getIntent();
+        String sourceActivity = intent.getStringExtra("source_activity");
+        year = intent.getIntExtra("year", 2000);
+        month = intent.getIntExtra("month", 1);
+        rowInMonth = intent.getIntExtra("rowInMonth", 1);
+        //TODO: query database with days in the week corresponding to the parameters from the previous intent
+
         ActionBar ab = getSupportActionBar();
         if(ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);

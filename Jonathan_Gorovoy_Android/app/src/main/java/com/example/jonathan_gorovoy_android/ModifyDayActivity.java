@@ -3,10 +3,12 @@ package com.example.jonathan_gorovoy_android;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -21,6 +23,7 @@ public class ModifyDayActivity extends AppCompatActivity {
     Button btn1, btn2;
     int year, month, rowInMonth;
     int day, eventIndex;
+    int routineIndex;
     boolean isSpecificDay;
 
     ListView eventList;
@@ -31,6 +34,20 @@ public class ModifyDayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_day);
 
+        Intent intent = getIntent();
+        String sourceActivity = intent.getStringExtra("source_activity");
+        if(sourceActivity.equals("activity_month_calendar") || sourceActivity.equals("activity_week_calendar") || sourceActivity.equals("activity_modify_event"))
+        {
+            year = intent.getIntExtra("year", 2000);
+            month = intent.getIntExtra("month", 1);
+            rowInMonth = intent.getIntExtra("rowInMonth", 1);
+            day = intent.getIntExtra("day", 1);
+        }
+        else if(sourceActivity.equals("activity_view_routines"))
+        {
+            routineIndex = intent.getIntExtra("routineIndex", 1);
+        }
+
         ActionBar ab = getSupportActionBar();
         if(ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
@@ -40,9 +57,26 @@ public class ModifyDayActivity extends AppCompatActivity {
         btn2=(Button)findViewById(R.id.button12);
 
         eventList = (ListView)findViewById(R.id.eventList);
-        getEventsDemo();
+        getEventsDemo(); // TODO: replace by query of database for events in the given day
         EventDayViewAdapter edva = new EventDayViewAdapter(this, R.layout.event_day_view, eventArray);
         eventList.setAdapter(edva);
+        AdapterView.OnItemClickListener eventListListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EventDayView item = eventArray.get(position);
+                //TODO: query database using item functions and the other variables to find eventIndex
+                Intent i = new Intent(ModifyDayActivity.this, ModifyEventActivity.class);
+                i.putExtra("source_activity", "activity_modify_day");
+                i.putExtra("year", year);
+                i.putExtra("month", month);
+                i.putExtra("day", day);
+                i.putExtra("rowInMonth", rowInMonth);
+                i.putExtra("eventIndex", eventIndex);
+                i.putExtra("isSpecificDay", isSpecificDay);
+                startActivity(i);
+            }
+        };
+        eventList.setOnItemClickListener(eventListListener);
 
         btn1.setOnClickListener(this::onClick);
         btn2.setOnClickListener(this::onClick);
@@ -50,14 +84,14 @@ public class ModifyDayActivity extends AppCompatActivity {
 
     public void getEventsDemo()
     {
-        year = 2019;
-        month = 8;
-        day = 25;
+        int demoYear = 2019;
+        int demoMonth = 8;
+        int demoDay = 25;
         EventDayView ev = new EventDayView("15:00", "16:30", "Walk dog out", "Take dog out for a walk around the park");
-        ev.setInPast(year, month, day, true, GregorianCalendar.getInstance().getTime());
+        ev.setInPast(demoYear, demoMonth, demoDay, true, GregorianCalendar.getInstance().getTime());
         eventArray.add(ev);
         ev = new EventDayView("16:30", "17:00", "Lunch", "Grab lunch from the fridge");
-        ev.setInPast(2021, month, day, true, GregorianCalendar.getInstance().getTime());
+        ev.setInPast(2021, demoMonth, demoDay, true, GregorianCalendar.getInstance().getTime());
         eventArray.add(ev);
         ev = new EventDayView("17:20", "18:00", "Watch Lesson", "Watch the lesson recorded by math teacher in preparation for the test");
         ev.setInPastValue(true);
@@ -67,6 +101,7 @@ public class ModifyDayActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
+        /*
         Intent i;
         switch(view.getId())
         {
@@ -90,6 +125,7 @@ public class ModifyDayActivity extends AppCompatActivity {
                 startActivity(i);
                 break;
         }
+        */
     }
 
     @Override
