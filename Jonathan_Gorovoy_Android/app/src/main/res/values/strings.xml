@@ -20,4 +20,15 @@
     <string name="settingsText">Settings</string>
     <string name="toInBetween">to</string>
     <string name="multiUseApply">Apply</string>
+    <string name="delete">Delete</string>
+    <string name="addEvent">+</string>
+    <string name="createRoutine">Create</string>
+    <string name="removeRoutine">Remove</string>
+
+    <string name="hintTitle">Title</string>
+    <string name="hintDescription">Description</string>
+    <string name="hintStartHour">00:00</string>
+    <string name="hintEndHour">00:00</string>
+    <string name="hintDeadline">DD/MM/YYYY</string>
+
 </resources>

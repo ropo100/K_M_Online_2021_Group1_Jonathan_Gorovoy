@@ -2,40 +2,67 @@ package com.example.jonathan_gorovoy_android;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class ModifyEventActivity extends AppCompatActivity {
 
     Button btn1, btn2;
-    int year, month, rowInMonth, day;
-    boolean isSpecificDay;
+    int year=0, month=0, day=0, eventIndex=0, routineIndex=0;
+    int dueDay=0, dueMonth=0, dueYear=0;
+    boolean isSpecificDay=true, isDeadline=false;
+    String title="", description="", startHour="", endHour="", dueDate="";
+    String sourceActivity;
+    Dal dal;
+
+    EditText editTitle, editDescription, editStartHour, editEndHour, editDeadline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_event);
 
+        dal = new Dal(ModifyEventActivity.this);
+
+        editTitle = (EditText)findViewById(R.id.editTitle);
+        editDescription = (EditText)findViewById(R.id.editDescription);
+        editStartHour = (EditText)findViewById(R.id.eventStartTime);
+        editEndHour = (EditText)findViewById(R.id.eventEndTime);
+        editDeadline = (EditText)findViewById(R.id.eventDueDate);
+
         Intent intent = getIntent();
-        String sourceActivity = intent.getStringExtra("source_activity");
+        sourceActivity = intent.getStringExtra("source_activity");
         isSpecificDay = intent.getBooleanExtra("isSpecificDay", false);
-        if(isSpecificDay)
-        {
+        eventIndex = intent.getIntExtra("eventIndex", 0);
+        isDeadline = dal.isDeadline(eventIndex);
+        routineIndex = intent.getIntExtra("routineIndex", 0);
+        if (isSpecificDay) {
             year = intent.getIntExtra("year", 2000);
             month = intent.getIntExtra("month", 1);
-            rowInMonth = intent.getIntExtra("rowInMonth", 1);
             day = intent.getIntExtra("day", 1);
-            //TODO: query with event index and date and fill out the boxes corresponding to a specific event on a specific day
-            //also disable ability to edit if the event happened in a date before today(in the past)
         }
-        else
-        {
-            //TODO: query with event index and fill out boxes corresponding to a deadline or an event in a routine (no specific date, only due date)
+        if(eventIndex != 0) {
+            title = intent.getStringExtra("title");
+            description = intent.getStringExtra("description");
+            endHour = intent.getStringExtra("endHour");
+            editTitle.setText(title);
+            editDescription.setText(description);
+            editEndHour.setText(endHour);
+            if(isDeadline)
+            { // start hour disabled for deadline
+                dueDate = dal.getDeadline(eventIndex);
+                editDeadline.setText(dueDate);
+            }
+            else {
+                startHour = intent.getStringExtra("startHour");
+                editStartHour.setText(startHour);
+            }
+            //also disable ability to edit if the event happened in a date before today(in the past)
         }
 
         ActionBar ab = getSupportActionBar();
@@ -43,46 +70,43 @@ public class ModifyEventActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        btn1=(Button)findViewById(R.id.button21);
-        btn2=(Button)findViewById(R.id.button22);
+        btn1=(Button)findViewById(R.id.btnApply);
+        btn2=(Button)findViewById(R.id.btnDelete);
 
         btn1.setOnClickListener(this::onClick);
         btn2.setOnClickListener(this::onClick);
     }
 
     public void onClick(View view) {
-        Intent i;
         switch(view.getId())
         {
-            case R.id.button21:
-                //TODO: get values in fields, error check them, update or add to database if no syntax errors (for example not int in date)
-                //and according to the values in due date/start hour and end hour decide if its an event in a day or routine and go to that activity or if its a deadline and go to that activity
-                if(true) //TODO: change condition according to above comment
+            case R.id.btnApply:
+                startHour = editStartHour.getText().toString();
+                endHour = editEndHour.getText().toString();
+                title = editTitle.getText().toString();
+                description = editDescription.getText().toString();
+                dueDate = editDeadline.getText().toString();
+
+                dal.addEvent(day, month, year, startHour, endHour, title, description, routineIndex, eventIndex);
+
+                //TODO: separate dueDate into dueDay, dueMonth, dueYear
+                if(isDeadline && !dueDate.equals(""))
                 {
-                    i = new Intent(this, ViewDeadlinesActivity.class);
-                    i.putExtra("source_activity", "activity_modify_event");
-                    startActivity(i);
+                    dal.addDeadline(dueDay, dueMonth, dueYear, eventIndex);
                 }
-                else
-                {
-                    i = new Intent(this, ModifyDayActivity.class);
-                    i.putExtra("source_activity", "activity_modify_event");
-                    i.putExtra("year", year);
-                    i.putExtra("month", month);
-                    i.putExtra("rowInMonth", rowInMonth);
-                    i.putExtra("day", day);
-                    startActivity(i);
+                else if (isDeadline && dueDate.equals(""))
+                { //if it was a deadline but is now empty as in no longer a deadline
+                    dal.deleteDeadline(eventIndex);
                 }
+                finishAndReturn();
                 break;
-            /*case R.id.button22:
-                i = new Intent(this, ModifyDayActivity.class);
-                i.putExtra("source_activity", "activity_modify_event");
-                i.putExtra("year", year);
-                i.putExtra("month", month);
-                i.putExtra("rowInMonth", rowInMonth);
-                i.putExtra("day", day);
-                startActivity(i);
-                break;*/
+            case R.id.btnDelete:
+                if(isDeadline) {
+                    dal.deleteDeadline(eventIndex);
+                }
+                dal.deleteEvent(eventIndex);
+                finishAndReturn();
+                break;
         }
     }
 
@@ -91,16 +115,39 @@ public class ModifyEventActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                Intent i;
-                i = new Intent(this, ModifyDayActivity.class);
-                i.putExtra("source_activity", "activity_modify_event");
-                i.putExtra("year", year);
-                i.putExtra("month", month);
-                i.putExtra("rowInMonth", rowInMonth);
-                i.putExtra("day", day);
-                startActivity(i);
+                finishAndReturn();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void finishAndReturn()
+    {
+        //Move back to the same screen you entered from with the same intent parameters they need to load the same thing
+        Intent i;
+        if(sourceActivity.equals("activity_modify_day"))
+        {
+            i = new Intent(this, ModifyDayActivity.class);
+            i.putExtra("source_activity", "activity_modify_event");
+            i.putExtra("day",day);
+            i.putExtra("month",month);
+            i.putExtra("year",year);
+            i.putExtra("routineIndex",routineIndex);
+            i.putExtra("isSpecificDay", isSpecificDay);
+            startActivity(i);
+        }
+        else if(sourceActivity.equals("activity_view_deadlines"))
+        {
+            i = new Intent(this, ViewDeadlinesActivity.class);
+            i.putExtra("source_activity", "activity_modify_event");
+            startActivity(i);
+        }
+        else
+        {
+            i = new Intent(this, MainActivity.class);
+            i.putExtra("source_activity", "activity_modify_event");
+            startActivity(i);
+        }
     }
 }

@@ -10,14 +10,16 @@ public class EventDayView { // class for an event in the view of days in particu
     private String title;
     private String description;
     private boolean inPast;
+    private int eventIndex;
 
-    public EventDayView(String startHour, String endHour, String title, String description)
+    public EventDayView(String startHour, String endHour, String title, String description, int eventIndex)
     {
         this.startHour = startHour;
         this.endHour = endHour;
         this.title = title;
         this.description = description;
         this.inPast = false;
+        this.eventIndex = eventIndex;
     }
 
     public void setInPast(int year, int month, int day, boolean isSpecificDay, Date currentDate)
@@ -53,13 +55,17 @@ public class EventDayView { // class for an event in the view of days in particu
     public boolean getInPast() { return this.inPast;}
     public void setInPastValue(boolean inPast) { this.inPast = inPast;} // if you know from the start if it is in the past
 
+    public int getEventIndex() { return this.eventIndex; };
+    public void setEventIndex(int eventIndex) { this.eventIndex = eventIndex; };
+
     public String toString()
     {
         return "EventDayView{" +
-                "startHour='" + startHour + '\'' +
-                "endHour='" + endHour + '\'' +
-                "title='" + title + '\'' +
-                "description='" + description + '\'' +
+                "startHour='" + startHour + "\' " +
+                "endHour='" + endHour + "\' " +
+                "title='" + title + "\' " +
+                "description='" + description + "\' " +
+                "eventIndex=" + eventIndex +
                 '}';
     }
 }

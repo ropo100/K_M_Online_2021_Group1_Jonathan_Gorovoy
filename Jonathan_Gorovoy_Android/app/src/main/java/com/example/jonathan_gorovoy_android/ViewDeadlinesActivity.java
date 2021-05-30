@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 public class ViewDeadlinesActivity extends AppCompatActivity {
 
-    Button btn1, btn2;
     int eventIndex;
     boolean isSpecificDay;
 
@@ -35,8 +34,6 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        btn1=(Button)findViewById(R.id.button71);
-        btn2=(Button)findViewById(R.id.button72);
 
         deadlineList = (ListView)findViewById(R.id.deadlineList);
         getDeadlinesDemo();
@@ -50,14 +47,13 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
                 Intent i = new Intent(ViewDeadlinesActivity.this, ModifyEventActivity.class);
                 i.putExtra("source_activity", "activity_view_deadlines");
                 i.putExtra("eventIndex", eventIndex);
+                i.putExtra("title", item.getText());
                 i.putExtra("isSpecificDay", false); //deadlines are until specific dates, but going to this activity isn't from a specific day to return to, thus only the due date matters and can be changed and the deadline isn't tied to a day
                 startActivity(i);
             }
         };
         deadlineList.setOnItemClickListener(deadlineListListener);
 
-        btn1.setOnClickListener(this::onClick);
-        btn2.setOnClickListener(this::onClick);
     }
 
     private void getDeadlinesDemo() {

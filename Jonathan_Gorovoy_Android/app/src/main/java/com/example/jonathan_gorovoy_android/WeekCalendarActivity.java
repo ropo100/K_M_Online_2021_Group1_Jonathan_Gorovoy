@@ -23,7 +23,7 @@ public class WeekCalendarActivity extends AppCompatActivity {
         String sourceActivity = intent.getStringExtra("source_activity");
         year = intent.getIntExtra("year", 2000);
         month = intent.getIntExtra("month", 1);
-        rowInMonth = intent.getIntExtra("rowInMonth", 1);
+        //change it so it sends the day that was long pressed too
         //TODO: query database with days in the week corresponding to the parameters from the previous intent
 
         ActionBar ab = getSupportActionBar();
@@ -41,7 +41,7 @@ public class WeekCalendarActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
-        Intent i;
+        /*Intent i;
         switch(view.getId()) {
             case R.id.button91:
                 i = new Intent(this, MonthCalendarActivity.class);
@@ -56,7 +56,6 @@ public class WeekCalendarActivity extends AppCompatActivity {
                 i.putExtra("year", year);
                 i.putExtra("month", month);
                 i.putExtra("day", day);
-                i.putExtra("rowInMonth", rowInMonth);
                 startActivity(i);
                 break;
             case R.id.button93:
@@ -65,10 +64,9 @@ public class WeekCalendarActivity extends AppCompatActivity {
                 i.putExtra("year", year);
                 i.putExtra("month", month);
                 i.putExtra("day", day);
-                i.putExtra("rowInMonth", rowInMonth);
                 startActivity(i);
                 break;
-        }
+        }*/
     }
 
     @Override

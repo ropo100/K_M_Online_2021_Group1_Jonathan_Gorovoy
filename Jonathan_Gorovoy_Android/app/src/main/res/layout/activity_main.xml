@@ -7,31 +7,31 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/button01"
+        android:id="@+id/btnSettings"
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginStart="16dp"
         android:onClick="onClick"
         android:text="@string/settings_screen"
-        app:layout_constraintBottom_toBottomOf="@+id/button04"
-        app:layout_constraintStart_toEndOf="@+id/button04"
-        app:layout_constraintTop_toTopOf="@+id/button04"
+        app:layout_constraintBottom_toBottomOf="@+id/btnCalendar"
+        app:layout_constraintStart_toEndOf="@+id/btnCalendar"
+        app:layout_constraintTop_toTopOf="@+id/btnCalendar"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/button02"
+        android:id="@+id/btnDeadlines"
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginStart="16dp"
         android:onClick="onClick"
         android:text="@string/view_deadlines_screen"
-        app:layout_constraintBottom_toBottomOf="@+id/button03"
-        app:layout_constraintStart_toEndOf="@+id/button03"
-        app:layout_constraintTop_toTopOf="@+id/button03"
+        app:layout_constraintBottom_toBottomOf="@+id/btnRoutines"
+        app:layout_constraintStart_toEndOf="@+id/btnRoutines"
+        app:layout_constraintTop_toTopOf="@+id/btnRoutines"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/button03"
+        android:id="@+id/btnRoutines"
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginStart="36dp"
@@ -42,16 +42,16 @@
         app:layout_constraintTop_toBottomOf="@+id/welcomeText" />
 
     <Button
-        android:id="@+id/button04"
+        android:id="@+id/btnCalendar"
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginTop="8dp"
         android:onClick="onClick"
         android:text="@string/month_calendar_screen"
-        app:layout_constraintEnd_toEndOf="@+id/button03"
+        app:layout_constraintEnd_toEndOf="@+id/btnRoutines"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button03"
-        app:layout_constraintTop_toBottomOf="@+id/button03" />
+        app:layout_constraintStart_toStartOf="@+id/btnRoutines"
+        app:layout_constraintTop_toBottomOf="@+id/btnRoutines" />
 
     <TextView
         android:id="@+id/welcomeText"

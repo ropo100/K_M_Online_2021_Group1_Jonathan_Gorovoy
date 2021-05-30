@@ -9,10 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Jonathan_Gorovoy_Android">
-        <activity android:name=".ModifyRoutineActivity" android:label="Modify Routine" />
         <activity android:name=".ModifyEventActivity" android:label="Modify Event" />
         <activity android:name=".ModifyDayActivity" android:label="Modify Day" />
-        <activity android:name=".PastDayActivity" android:label="Past Day" />
         <activity android:name=".WeekCalendarActivity" android:label="Weekly Calendar" />
         <activity android:name=".MonthCalendarActivity" android:label="Monthly Calendar" />
         <activity android:name=".ViewRoutinesActivity" android:label="Routines" />

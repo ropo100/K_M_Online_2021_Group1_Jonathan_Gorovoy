@@ -19,8 +19,7 @@ import java.util.Date;
 
 public class MonthCalendarActivity extends AppCompatActivity {
 
-    Button btn1, btn2;
-    int year, month, rowInMonth;
+    int year, month;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +50,7 @@ public class MonthCalendarActivity extends AppCompatActivity {
                 Intent i = new Intent(MonthCalendarActivity.this, ModifyDayActivity.class);
                 i.putExtra("source_activity", "activity_month_calendar");
                 i.putExtra("year", dateCal.get(Calendar.YEAR));
-                i.putExtra("month", dateCal.get(Calendar.MONTH));
-                i.putExtra("rowInMonth", dateCal.get(Calendar.WEEK_OF_MONTH));
+                i.putExtra("month", dateCal.get(Calendar.MONTH)+1);
                 i.putExtra("day", dateCal.get(Calendar.DAY_OF_MONTH));
                 startActivity(i);
             }
@@ -65,17 +63,11 @@ public class MonthCalendarActivity extends AppCompatActivity {
                 Intent i = new Intent(MonthCalendarActivity.this, WeekCalendarActivity.class);
                 i.putExtra("source_activity", "activity_month_calendar");
                 i.putExtra("year", dateCal.get(Calendar.YEAR));
-                i.putExtra("month", dateCal.get(Calendar.MONTH));
-                i.putExtra("rowInMonth", dateCal.get(Calendar.WEEK_OF_MONTH));
+                i.putExtra("month", dateCal.get(Calendar.MONTH)+1);
                 startActivity(i);
             }
         });
 
-        btn1=(Button)findViewById(R.id.button41);
-        btn2=(Button)findViewById(R.id.button42);
-
-        btn1.setOnClickListener(this::onClick);
-        btn2.setOnClickListener(this::onClick);
     }
 
     public void onClick(View view) {
@@ -93,7 +85,6 @@ public class MonthCalendarActivity extends AppCompatActivity {
                 i.putExtra("source_activity", "activity_month_calendar");
                 i.putExtra("year", year);
                 i.putExtra("month", month);
-                i.putExtra("rowInMonth", rowInMonth);
                 startActivity(i);
                 break;
         }

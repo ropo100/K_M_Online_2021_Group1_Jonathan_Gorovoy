@@ -14,10 +14,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btn1=(Button)findViewById(R.id.button01);
-        btn2=(Button)findViewById(R.id.button02);
-        btn3=(Button)findViewById(R.id.button03);
-        btn4=(Button)findViewById(R.id.button04);
+        btn1=(Button)findViewById(R.id.btnSettings);
+        btn2=(Button)findViewById(R.id.btnDeadlines);
+        btn3=(Button)findViewById(R.id.btnRoutines);
+        btn4=(Button)findViewById(R.id.btnCalendar);
  
         btn1.setOnClickListener(this::onClick);
         btn2.setOnClickListener(this::onClick);
@@ -28,22 +28,22 @@ public class MainActivity extends AppCompatActivity {
         Intent i;
         switch(view.getId())
         {
-            case R.id.button01:
+            case R.id.btnSettings:
                 i = new Intent(this, SettingsActivity.class);
                 i.putExtra("source_activity", "activity_main");
                 startActivity(i);
                 break;
-            case R.id.button02:
+            case R.id.btnDeadlines:
                 i = new Intent(this, ViewDeadlinesActivity.class);
                 i.putExtra("source_activity", "activity_main");
                 startActivity(i);
                 break;
-            case R.id.button03:
+            case R.id.btnRoutines:
                 i = new Intent(this, ViewRoutinesActivity.class);
                 i.putExtra("source_activity", "activity_main");
                 startActivity(i);
                 break;
-            case R.id.button04:
+            case R.id.btnCalendar:
                 i = new Intent(this, MonthCalendarActivity.class);
                 i.putExtra("source_activity", "activity_main");
                 startActivity(i);

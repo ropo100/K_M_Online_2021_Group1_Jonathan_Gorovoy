@@ -34,7 +34,6 @@ public class CalendarViewAdapter extends ArrayAdapter<Date> {
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent)
     {
-
         Calendar calendar = Calendar.getInstance();
         Date date = getItem(position); // day in question
         calendar.setTime(date);
@@ -58,11 +57,11 @@ public class CalendarViewAdapter extends ArrayAdapter<Date> {
         if (month != currentCalendar.get(Calendar.MONTH) || year != currentCalendar.get(Calendar.YEAR)) {
             // if day not in current month/year that is being displayed, make it gray
             ((TextView)view).setTextColor(Color.LTGRAY);
-        } else if (day == calendarToday.get(Calendar.DATE)) {
+        } else if (day == calendarToday.get(Calendar.DATE) && month == calendarToday.get(Calendar.MONTH) && year == calendarToday.get(Calendar.YEAR)) {
             // if day is today, change background to green
             view.setBackgroundColor(getContext().getResources().getColor(R.color.green_light, null));
         }
-        else if (day != calendarToday.get(Calendar.DATE))
+        else if (day != calendarToday.get(Calendar.DATE) && month != calendarToday.get(Calendar.MONTH) && year != calendarToday.get(Calendar.YEAR))
         {
             view.setBackgroundColor(getContext().getResources().getColor(R.color.white, null));
         }

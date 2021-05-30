@@ -7,30 +7,28 @@
     tools:context=".ViewRoutinesActivity">
 
     <Button
-        android:id="@+id/button81"
+        android:id="@+id/btnCreate"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:onClick="onClick"
-        android:visibility="invisible"
-        android:text="@string/main_screen"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:text="@string/createRoutine"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.191"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/btnRemove"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button82"
+        android:id="@+id/btnRemove"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:onClick="onClick"
-        android:visibility="invisible"
-        android:text="@string/modify_routine_screen"
-        app:layout_constraintEnd_toEndOf="@+id/button81"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button81"
-        app:layout_constraintTop_toBottomOf="@+id/button81" />
+        android:layout_height="60dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/removeRoutine"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/routineList"

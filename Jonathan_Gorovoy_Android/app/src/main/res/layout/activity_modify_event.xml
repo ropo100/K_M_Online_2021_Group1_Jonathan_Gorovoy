@@ -16,36 +16,34 @@
         app:layout_constraintTop_toBottomOf="@+id/eventStartTime" />
 
     <Button
-        android:id="@+id/button21"
+        android:id="@+id/btnApply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="88dp"
         android:onClick="onClick"
         android:text="@string/multiUseApply"
-        app:layout_constraintEnd_toEndOf="@+id/eventDueDate"
-        app:layout_constraintHorizontal_bias="0.486"
-        app:layout_constraintStart_toStartOf="@+id/eventDueTime"
-        app:layout_constraintTop_toBottomOf="@+id/eventDueTime" />
+        app:layout_constraintBottom_toBottomOf="@+id/btnDelete"
+        app:layout_constraintStart_toEndOf="@+id/btnDelete"
+        app:layout_constraintTop_toTopOf="@+id/btnDelete"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/button22"
+        android:id="@+id/btnDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="12dp"
         android:onClick="onClick"
-        android:visibility="invisible"
-        android:text="@string/modify_day_screen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.134"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/delete"
+        app:layout_constraintStart_toStartOf="@+id/eventDueDate"
+        app:layout_constraintTop_toBottomOf="@+id/eventDueDate" />
 
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="76dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
         android:text="@string/titleText"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,8 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ems="10"
+        android:hint="@string/hintTitle"
         android:inputType="textPersonName"
-        android:text="Name"
         app:layout_constraintBottom_toBottomOf="@+id/titleText"
         app:layout_constraintStart_toEndOf="@+id/titleText"
         app:layout_constraintTop_toTopOf="@+id/titleText" />
@@ -80,6 +78,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:gravity="start|top"
+        android:hint="@string/hintDescription"
         android:inputType="textMultiLine"
         app:layout_constraintStart_toStartOf="@+id/descriptionText"
         app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
@@ -108,6 +107,7 @@
         android:layout_width="179dp"
         android:layout_height="43dp"
         android:ems="10"
+        android:hint="@string/hintStartHour"
         android:inputType="time"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/eventStartText"
@@ -118,55 +118,20 @@
         android:layout_width="179dp"
         android:layout_height="43dp"
         android:ems="10"
+        android:hint="@string/hintEndHour"
         android:inputType="time"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/eventEndText"
         app:layout_constraintTop_toBottomOf="@+id/eventEndText" />
 
     <EditText
-        android:id="@+id/eventDueTime"
-        android:layout_width="179dp"
-        android:layout_height="43dp"
-        android:ems="10"
-        android:inputType="time"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/eventDueText"
-        app:layout_constraintTop_toBottomOf="@+id/eventDueText" />
-
-    <EditText
         android:id="@+id/eventDueDate"
         android:layout_width="179dp"
         android:layout_height="43dp"
-        android:layout_marginStart="8dp"
         android:ems="10"
+        android:hint="@string/hintDeadline"
         android:inputType="date"
-        app:layout_constraintBottom_toBottomOf="@+id/eventDueTime"
-        app:layout_constraintStart_toEndOf="@+id/eventDueTime"
-        app:layout_constraintTop_toTopOf="@+id/eventDueTime"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/eventEndDate"
-        android:layout_width="179dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:inputType="date"
-        app:layout_constraintBottom_toBottomOf="@+id/eventEndTime"
-        app:layout_constraintStart_toEndOf="@+id/eventEndTime"
-        app:layout_constraintTop_toTopOf="@+id/eventEndTime"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <EditText
-        android:id="@+id/eventStartDate"
-        android:layout_width="179dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:inputType="date"
-        app:layout_constraintBottom_toBottomOf="@+id/eventStartTime"
-        app:layout_constraintStart_toEndOf="@+id/eventStartTime"
-        app:layout_constraintTop_toTopOf="@+id/eventStartTime"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="@+id/eventDueText"
+        app:layout_constraintTop_toBottomOf="@+id/eventDueText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
