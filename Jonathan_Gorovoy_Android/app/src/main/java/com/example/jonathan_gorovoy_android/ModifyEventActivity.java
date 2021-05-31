@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 public class ModifyEventActivity extends AppCompatActivity {
@@ -20,12 +23,17 @@ public class ModifyEventActivity extends AppCompatActivity {
     String sourceActivity;
     Dal dal;
 
+    CheckBox deadlineCheckbox;
     EditText editTitle, editDescription, editStartHour, editEndHour, editDeadline;
+    InputFilter filterHour; // filter for 23:59 input
+    boolean doneOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_event);
+
+        createTimeFilter();
 
         dal = new Dal(ModifyEventActivity.this);
 
@@ -33,14 +41,18 @@ public class ModifyEventActivity extends AppCompatActivity {
         editDescription = (EditText)findViewById(R.id.editDescription);
         editStartHour = (EditText)findViewById(R.id.eventStartTime);
         editEndHour = (EditText)findViewById(R.id.eventEndTime);
-        editDeadline = (EditText)findViewById(R.id.eventDueDate);
+        deadlineCheckbox = (CheckBox)findViewById(R.id.isDeadlineCheckbox);
+
+        editStartHour.setFilters(new InputFilter[]{filterHour});
+        editEndHour.setFilters(new InputFilter[]{filterHour});
 
         Intent intent = getIntent();
         sourceActivity = intent.getStringExtra("source_activity");
         isSpecificDay = intent.getBooleanExtra("isSpecificDay", false);
         eventIndex = intent.getIntExtra("eventIndex", 0);
-        isDeadline = dal.isDeadline(eventIndex);
         routineIndex = intent.getIntExtra("routineIndex", 0);
+        isDeadline = intent.getBooleanExtra("isDeadline", false);
+        deadlineCheckbox.setChecked(isDeadline);
         if (isSpecificDay) {
             year = intent.getIntExtra("year", 2000);
             month = intent.getIntExtra("month", 1);
@@ -49,20 +61,14 @@ public class ModifyEventActivity extends AppCompatActivity {
         if(eventIndex != 0) {
             title = intent.getStringExtra("title");
             description = intent.getStringExtra("description");
+            startHour = intent.getStringExtra("startHour");
             endHour = intent.getStringExtra("endHour");
             editTitle.setText(title);
             editDescription.setText(description);
+            editStartHour.setText(startHour);
             editEndHour.setText(endHour);
-            if(isDeadline)
-            { // start hour disabled for deadline
-                dueDate = dal.getDeadline(eventIndex);
-                editDeadline.setText(dueDate);
-            }
-            else {
-                startHour = intent.getStringExtra("startHour");
-                editStartHour.setText(startHour);
-            }
-            //also disable ability to edit if the event happened in a date before today(in the past)
+            //TODO: also disable ability to edit if the event happened in a date before today(in the past)
+
         }
 
         ActionBar ab = getSupportActionBar();
@@ -86,24 +92,11 @@ public class ModifyEventActivity extends AppCompatActivity {
                 title = editTitle.getText().toString();
                 description = editDescription.getText().toString();
                 dueDate = editDeadline.getText().toString();
-
-                dal.addEvent(day, month, year, startHour, endHour, title, description, routineIndex, eventIndex);
-
-                //TODO: separate dueDate into dueDay, dueMonth, dueYear
-                if(isDeadline && !dueDate.equals(""))
-                {
-                    dal.addDeadline(dueDay, dueMonth, dueYear, eventIndex);
-                }
-                else if (isDeadline && dueDate.equals(""))
-                { //if it was a deadline but is now empty as in no longer a deadline
-                    dal.deleteDeadline(eventIndex);
-                }
+                isDeadline = deadlineCheckbox.isChecked();
+                dal.addEvent(day, month, year, startHour, endHour, title, description, routineIndex, eventIndex, isDeadline);
                 finishAndReturn();
                 break;
             case R.id.btnDelete:
-                if(isDeadline) {
-                    dal.deleteDeadline(eventIndex);
-                }
                 dal.deleteEvent(eventIndex);
                 finishAndReturn();
                 break;
@@ -149,5 +142,64 @@ public class ModifyEventActivity extends AppCompatActivity {
             i.putExtra("source_activity", "activity_modify_event");
             startActivity(i);
         }
+    }
+
+    private void createTimeFilter() {
+        filterHour  = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest,
+                                       int dstart, int dend) {
+
+                if(source.length() > 1 && !doneOnce){
+                    source = source.subSequence(source.length()-1, source.length());
+                    if(source.charAt(0)  >= '0' && source.charAt(0) <= '2'){
+                        doneOnce = true;
+                        return source;
+                    }else{
+                        return "";
+                    }
+                }
+
+
+                if (source.length() == 0) {
+                    return null;// deleting, keep original editing
+                }
+                String result = "";
+                result += dest.toString().substring(0, dstart);
+                result += source.toString().substring(start, end);
+                result += dest.toString().substring(dend, dest.length());
+
+                if (result.length() > 5) {
+                    return "";// do not allow this edit
+                }
+                boolean allowEdit = true;
+                char c;
+                if (result.length() > 0) {
+                    c = result.charAt(0);
+                    allowEdit = (c >= '0' && c <= '2');
+                }
+                if (result.length() > 1) {
+                    c = result.charAt(1);
+                    if(result.charAt(0) == '0' || result.charAt(0) == '1')
+                        allowEdit = allowEdit && (c >= '0' && c <= '9');
+                    else
+                        allowEdit = allowEdit && (c >= '0' && c <= '3');
+                }
+                if (result.length() > 2) {
+                    c = result.charAt(2);
+                    allowEdit = allowEdit && (c == ':');
+                }
+                if (result.length() > 3) {
+                    c = result.charAt(3);
+                    allowEdit = allowEdit && (c >= '0' && c <= '5');
+                }
+                if (result.length() > 4) {
+                    c = result.charAt(4);
+                    allowEdit = allowEdit && (c >= '0' && c <= '9');
+                }
+                return allowEdit ? null : "";
+            }
+
+        };
     }
 }

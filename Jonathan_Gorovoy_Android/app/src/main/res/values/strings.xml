@@ -24,6 +24,8 @@
     <string name="addEvent">+</string>
     <string name="createRoutine">Create</string>
     <string name="removeRoutine">Remove</string>
+    <string name="checkboxText">Deadline</string>
+    <string name="showReminders">Show Reminders</string>
 
     <string name="hintTitle">Title</string>
     <string name="hintDescription">Description</string>

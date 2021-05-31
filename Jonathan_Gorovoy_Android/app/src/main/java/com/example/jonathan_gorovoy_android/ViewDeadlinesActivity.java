@@ -23,6 +23,7 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
 
     ListView deadlineList;
     ArrayList<DeadlineView> deadlineArray = new ArrayList<DeadlineView>();
+    Dal dal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +35,11 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
+        Dal dal = new Dal(ViewDeadlinesActivity.this);
 
         deadlineList = (ListView)findViewById(R.id.deadlineList);
-        getDeadlinesDemo();
+        //getDeadlinesDemo();
+        deadlineArray = dal.getAllDeadlines();
         DeadlineViewAdapter dva = new DeadlineViewAdapter(this, R.layout.deadline_view, deadlineArray);
         deadlineList.setAdapter(dva);
         AdapterView.OnItemClickListener deadlineListListener = new AdapterView.OnItemClickListener() {
@@ -46,9 +49,17 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
                 //TODO: query database to find event index according to DeadlineView item members/methods
                 Intent i = new Intent(ViewDeadlinesActivity.this, ModifyEventActivity.class);
                 i.putExtra("source_activity", "activity_view_deadlines");
-                i.putExtra("eventIndex", eventIndex);
+                i.putExtra("year", item.getYear());
+                i.putExtra("month", item.getMonth());
+                i.putExtra("day", item.getDay());
+                i.putExtra("isSpecificDay", true); // the only ones shown here are ones that are on specific days
+                i.putExtra("routineIndex", 0);
                 i.putExtra("title", item.getText());
-                i.putExtra("isSpecificDay", false); //deadlines are until specific dates, but going to this activity isn't from a specific day to return to, thus only the due date matters and can be changed and the deadline isn't tied to a day
+                i.putExtra("description", item.getDescription());
+                i.putExtra("startHour", item.getStartHour());
+                i.putExtra("endHour", item.getEndHour());
+                i.putExtra("eventIndex", item.getEventIndex());
+                i.putExtra("isDeadline", true);
                 startActivity(i);
             }
         };
@@ -56,7 +67,7 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
 
     }
 
-    private void getDeadlinesDemo() {
+    /*private void getDeadlinesDemo() {
         DeadlineView dv = new DeadlineView("Safrut work", "17/12/2020");
         deadlineArray.add(dv);
         dv = new DeadlineView("Math test", "29/12/2020");
@@ -69,7 +80,7 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
         deadlineArray.add(dv);
         dv = new DeadlineView("Math bagrut", "19/04/2021");
         deadlineArray.add(dv);
-    }
+    }*/
 
     public void onClick(View view) {
         /*Intent i;

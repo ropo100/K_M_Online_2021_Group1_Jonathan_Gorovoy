@@ -83,7 +83,6 @@ public class ModifyDayActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EventDayView item = eventArray.get(position);
-                //TODO: query database using item functions and the other variables to find eventIndex
                 Intent i = new Intent(ModifyDayActivity.this, ModifyEventActivity.class);
                 i.putExtra("source_activity", "activity_modify_day");
                 i.putExtra("year", year);
@@ -96,6 +95,7 @@ public class ModifyDayActivity extends AppCompatActivity {
                 i.putExtra("startHour",item.getStartHour());
                 i.putExtra("endHour",item.getEndHour());
                 i.putExtra("eventIndex",item.getEventIndex());
+                i.putExtra("isDeadline", item.getIsDeadline());
                 startActivity(i);
             }
         };
@@ -109,16 +109,16 @@ public class ModifyDayActivity extends AppCompatActivity {
         int demoYear = 2019;
         int demoMonth = 8;
         int demoDay = 25;
-        EventDayView ev = new EventDayView("15:00", "16:30", "Walk dog out", "Take dog out for a walk around the park", 0);
+        EventDayView ev = new EventDayView("15:00", "16:30", "Walk dog out", "Take dog out for a walk around the park",0 , false);
         ev.setInPast(demoYear, demoMonth, demoDay, true, GregorianCalendar.getInstance().getTime());
         eventArray.add(ev);
-        ev = new EventDayView("16:30", "17:00", "Lunch", "Grab lunch from the fridge", 0);
+        ev = new EventDayView("16:30", "17:00", "Lunch", "Grab lunch from the fridge", 0, false);
         ev.setInPast(2021, demoMonth, demoDay, true, GregorianCalendar.getInstance().getTime());
         eventArray.add(ev);
-        ev = new EventDayView("17:20", "18:00", "Watch Lesson", "Watch the lesson recorded by math teacher in preparation for the test", 0);
+        ev = new EventDayView("17:20", "18:00", "Watch Lesson", "Watch the lesson recorded by math teacher in preparation for the test", 0, false);
         ev.setInPastValue(true);
         eventArray.add(ev);
-        ev = new EventDayView("18:00", "19:30", "Code Android project", "Add new adapter view to android project xml file", 0);
+        ev = new EventDayView("18:00", "19:30", "Code Android project", "Add new adapter view to android project xml file", 0, false);
         eventArray.add(ev);
     }
 

@@ -11,8 +11,9 @@ public class EventDayView { // class for an event in the view of days in particu
     private String description;
     private boolean inPast;
     private int eventIndex;
+    private boolean isDeadline;
 
-    public EventDayView(String startHour, String endHour, String title, String description, int eventIndex)
+    public EventDayView(String startHour, String endHour, String title, String description, int eventIndex, boolean isDeadline)
     {
         this.startHour = startHour;
         this.endHour = endHour;
@@ -20,6 +21,7 @@ public class EventDayView { // class for an event in the view of days in particu
         this.description = description;
         this.inPast = false;
         this.eventIndex = eventIndex;
+        this.isDeadline = isDeadline;
     }
 
     public void setInPast(int year, int month, int day, boolean isSpecificDay, Date currentDate)
@@ -55,16 +57,19 @@ public class EventDayView { // class for an event in the view of days in particu
     public boolean getInPast() { return this.inPast;}
     public void setInPastValue(boolean inPast) { this.inPast = inPast;} // if you know from the start if it is in the past
 
-    public int getEventIndex() { return this.eventIndex; };
-    public void setEventIndex(int eventIndex) { this.eventIndex = eventIndex; };
+    public int getEventIndex() { return this.eventIndex; }
+    public void setEventIndex(int eventIndex) { this.eventIndex = eventIndex; }
+
+    public boolean getIsDeadline() { return this.isDeadline; }
+    public void setIsDeadline(boolean isDeadline) { this.isDeadline = isDeadline; }
 
     public String toString()
     {
         return "EventDayView{" +
-                "startHour='" + startHour + "\' " +
-                "endHour='" + endHour + "\' " +
-                "title='" + title + "\' " +
-                "description='" + description + "\' " +
+                "startHour='" + startHour + "' " +
+                "endHour='" + endHour + "' " +
+                "title='" + title + "' " +
+                "description='" + description + "' " +
                 "eventIndex=" + eventIndex +
                 '}';
     }
