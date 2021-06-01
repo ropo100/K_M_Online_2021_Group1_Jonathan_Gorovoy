@@ -103,4 +103,12 @@ public class MonthCalendarActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("source_activity", "activity_month_calendar");
+        startActivity(i);
+    }
 }

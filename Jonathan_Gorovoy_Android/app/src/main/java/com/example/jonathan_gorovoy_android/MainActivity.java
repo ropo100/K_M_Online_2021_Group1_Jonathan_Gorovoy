@@ -50,4 +50,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //do nothing - theres no where to go back to
+    }
 }

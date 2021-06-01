@@ -83,4 +83,14 @@ public class WeekCalendarActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this, MonthCalendarActivity.class);
+        i.putExtra("source_activity", "activity_week_calendar");
+        i.putExtra("year", year);
+        i.putExtra("month", month);
+        startActivity(i);
+    }
 }

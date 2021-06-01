@@ -112,7 +112,7 @@ public class ViewRoutinesActivity extends AppCompatActivity {
                 inputDialog.show();
                 break;
             case R.id.btnRemove:
-                //choose names with checkbox and delete them if its not cancelled dialog
+                //choose routine by name and delete it
                 ListAdapter routineListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, routineArray);
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
                 dialogBuilder.setTitle("Remove Routine");
@@ -143,5 +143,13 @@ public class ViewRoutinesActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("source_activity", "activity_view_routines");
+        startActivity(i);
     }
 }

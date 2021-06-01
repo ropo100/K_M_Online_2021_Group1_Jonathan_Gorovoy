@@ -81,6 +81,26 @@ public class Dal extends SQLiteAssetHelper{
         db.close();
     }
 
+    public void addReminder(int reminderId, int eventIndex, Integer amountChosen, String unitChosen) {
+        SQLiteDatabase db = getWritableDatabase();
+        SQLiteStatement statement;
+        if(reminderId == 0) {
+            String sql_INSERT = "INSERT INTO reminders (eventIndex, timeBefore, unit) values (?,?,?)";
+            statement = db.compileStatement(sql_INSERT);
+        }
+        else
+        {
+            String sql_UPDATE = "UPDATE reminders SET eventIndex=?, timeBefore=?, unit=? WHERE id="+reminderId;
+            statement = db.compileStatement(sql_UPDATE);
+        }
+
+        statement.bindLong(1, eventIndex);
+        statement.bindLong(2, amountChosen);
+        statement.bindString(3, unitChosen);
+        statement.execute();
+        db.close();
+    }
+
     public String getRoutineName(int routineIndex)
     {
         String st = "SELECT routineName FROM routines WHERE id="+routineIndex;
@@ -109,6 +129,32 @@ public class Dal extends SQLiteAssetHelper{
         return id;
     }
 
+    public boolean isDeadline(int eventIndex)
+    {
+        String st = "SELECT isDeadline FROM events WHERE id="+eventIndex;
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery(st, null);
+        boolean found = cursor.getInt(cursor.getColumnIndex("isDeadline")) != 0;
+        cursor.close();
+        db.close();
+        return found;
+    }
+
+    public int getReminderIndex(int eventIndex, Integer amount, String unit)
+    {
+        int reminderId = 0;
+        String st = "SELECT * FROM reminders WHERE eventIndex="+eventIndex+" AND timeBefore="+amount+" AND unit='"+unit+"'";
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery(st, null);
+        while(cursor.moveToNext()) {
+            reminderId = cursor.getInt(cursor.getColumnIndex("id"));
+        }
+
+        cursor.close();
+        db.close();
+        return reminderId;
+    }
+
     public ArrayList<String> getRoutines()
     {
         ArrayList<String> ary = new ArrayList<>();
@@ -124,7 +170,7 @@ public class Dal extends SQLiteAssetHelper{
         return ary;
     }
 
-    public ArrayList<EventDayView> getEventsInDay(int day, int month, int year, int routineIndex)
+    public ArrayList<EventDayView> getEventsInDay(int day, int month, int year, int routineIndex, boolean inPast)
     {
         ArrayList<EventDayView> ary = new ArrayList<>();
         String st;
@@ -148,6 +194,7 @@ public class Dal extends SQLiteAssetHelper{
             int eventIndex = cursor.getInt(cursor.getColumnIndex("id"));
             boolean isDeadline = cursor.getInt(cursor.getColumnIndex("isDeadline")) != 0;
             EventDayView e = new EventDayView(startHour, endHour, title, description, eventIndex, isDeadline);
+            e.setInPastValue(inPast);
             ary.add(e);
         }
 
@@ -156,16 +203,6 @@ public class Dal extends SQLiteAssetHelper{
         return ary;
     }
 
-    public boolean isDeadline(int eventIndex)
-    {
-        String st = "SELECT isDeadline FROM events WHERE id="+eventIndex;
-        SQLiteDatabase db = getWritableDatabase();
-        Cursor cursor = db.rawQuery(st, null);
-        boolean found = cursor.getInt(cursor.getColumnIndex("isDeadline")) != 0;
-        cursor.close();
-        db.close();
-        return found;
-    }
 
     public ArrayList<DeadlineView> getAllDeadlines()
     {
@@ -189,6 +226,22 @@ public class Dal extends SQLiteAssetHelper{
         return ary;
     }
 
+    public ArrayList<String> getReminders(int eventIndex)
+    {
+        ArrayList<String> ary = new ArrayList<>();
+        String st = "SELECT * FROM reminders WHERE eventIndex="+eventIndex;
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery(st, null);
+        while(cursor.moveToNext()) {
+            int amount = cursor.getInt(cursor.getColumnIndex("timeBefore"));
+            String unit = cursor.getString(cursor.getColumnIndex("unit"));
+            ary.add(amount+" "+unit);
+        }
+        cursor.close();
+        db.close();
+        return ary;
+    }
+
     public void deleteEvent(int eventIndex)
     {
         SQLiteDatabase db = getWritableDatabase();
@@ -206,6 +259,16 @@ public class Dal extends SQLiteAssetHelper{
         SQLiteStatement statement = db.compileStatement(sql_DELETE);
 
         statement.bindLong(1, routineIndex);
+        statement.execute();
+        db.close();
+    }
+
+    public void deleteReminder(int reminderId) {
+        SQLiteDatabase db = getWritableDatabase();
+        String sql_DELETE = "DELETE FROM reminders WHERE id=?";
+        SQLiteStatement statement = db.compileStatement(sql_DELETE);
+
+        statement.bindLong(1, reminderId);
         statement.execute();
         db.close();
     }

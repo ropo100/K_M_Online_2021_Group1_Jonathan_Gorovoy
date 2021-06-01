@@ -1,15 +1,19 @@
 package com.example.jonathan_gorovoy_android;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,6 +21,7 @@ import com.example.jonathan_gorovoy_android.adapters.EventDayViewAdapter;
 import com.example.jonathan_gorovoy_android.classes.EventDayView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class ModifyDayActivity extends AppCompatActivity {
@@ -27,11 +32,14 @@ public class ModifyDayActivity extends AppCompatActivity {
     int routineIndex;
     int receivedRoutineIndex;
     boolean isSpecificDay;
+    boolean inPast = false;
     String sourceActivity;
 
     ListView eventList;
     ArrayList<EventDayView> eventArray = new ArrayList<EventDayView>();
     TextView dateText;
+
+    int btnChoice=0;//0=add event, 1=move deadline, 2=apply routine
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,12 @@ public class ModifyDayActivity extends AppCompatActivity {
             day = intent.getIntExtra("day", 1);
             routineIndex = 0;
             dateString = day + "/" + month + "/" + year;
+            Calendar today = Calendar.getInstance();
+            int todayYear = today.get(Calendar.YEAR), todayMonth = today.get(Calendar.MONTH)+1, todayDay = today.get(Calendar.DAY_OF_MONTH);
+            if(year<todayYear || (year==todayYear && month<todayMonth) || (year==todayYear && month==todayMonth && day<todayDay))
+            {//check if this day is in past provided its not a routine from the if statement it is nested in
+                inPast=true;
+            }
         }
         else if(sourceActivity.equals("activity_view_routines") || (sourceActivity.equals("activity_modify_event") && receivedRoutineIndex != 0))
         {
@@ -76,7 +90,7 @@ public class ModifyDayActivity extends AppCompatActivity {
 
         eventList = (ListView)findViewById(R.id.eventList);
         //getEventsDemo();
-        eventArray = dal.getEventsInDay(day, month, year, routineIndex);
+        eventArray = dal.getEventsInDay(day, month, year, routineIndex, inPast);
         EventDayViewAdapter edva = new EventDayViewAdapter(this, R.layout.event_day_view, eventArray);
         eventList.setAdapter(edva);
         AdapterView.OnItemClickListener eventListListener = new AdapterView.OnItemClickListener() {
@@ -95,6 +109,7 @@ public class ModifyDayActivity extends AppCompatActivity {
                 i.putExtra("startHour",item.getStartHour());
                 i.putExtra("endHour",item.getEndHour());
                 i.putExtra("eventIndex",item.getEventIndex());
+                i.putExtra("inPast", inPast);
                 i.putExtra("isDeadline", item.getIsDeadline());
                 startActivity(i);
             }
@@ -123,26 +138,71 @@ public class ModifyDayActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
-        Intent i;
+        btnChoice = 0;
         switch(view.getId()) {
             case R.id.btnAdd:
-                i = new Intent(this, ModifyEventActivity.class);
-                i.putExtra("source_activity", "activity_modify_day");
-                i.putExtra("year", year);
-                i.putExtra("month", month);
-                i.putExtra("day", day);
-                i.putExtra("eventIndex", eventIndex);
-                i.putExtra("isSpecificDay", isSpecificDay);
-                i.putExtra("routineIndex", routineIndex);
-                i.putExtra("isSpecificDay", isSpecificDay);
-                i.putExtra("title", "");
-                i.putExtra("description", "");
-                i.putExtra("startHour", "");
-                i.putExtra("endHour", "");
-                startActivity(i);
+                if(!inPast) {
+                    if (routineIndex == 0) {
+                        String[] options = {"Add Event Here", "Move Deadline Here", "Apply Routine Here"};
+                        ListAdapter optionListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, options);
+                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                        dialogBuilder.setTitle("Choose Action:");
+                        dialogBuilder.setAdapter(optionListAdapter,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int item) {
+                                        switch (item) { // by index in options array
+                                            case 0: // Add Event
+                                                addEventAction();
+                                                break;
+                                            case 1: // Move Deadline
+                                                moveDeadlineAction();
+                                                break;
+                                            case 2: // Apply Routine
+                                                applyRoutineAction();
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                });
+                        AlertDialog dialog = dialogBuilder.create();
+                        dialog.show();
+                    } else {// if it is a routine the plus button should just add an event
+                        addEventAction();
+                    }
+                }
                 break;
         }
     }
+
+    void addEventAction() {
+        Intent i;
+        i = new Intent(this, ModifyEventActivity.class);
+        i.putExtra("source_activity", "activity_modify_day");
+        i.putExtra("year", year);
+        i.putExtra("month", month);
+        i.putExtra("day", day);
+        i.putExtra("eventIndex", eventIndex);
+        i.putExtra("isSpecificDay", isSpecificDay);
+        i.putExtra("routineIndex", routineIndex);
+        i.putExtra("title", "");
+        i.putExtra("description", "");
+        i.putExtra("startHour", "");
+        i.putExtra("endHour", "");
+        i.putExtra("isDeadline", false);
+        i.putExtra("inPast", false);
+        startActivity(i);
+    }
+
+    void moveDeadlineAction() {
+
+    }
+
+    void applyRoutineAction() {
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -165,5 +225,23 @@ public class ModifyDayActivity extends AppCompatActivity {
                 }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(sourceActivity.equals("activity_month_calendar") || sourceActivity.equals("activity_week_calendar") || (sourceActivity.equals("activity_modify_event") && receivedRoutineIndex == 0)) {
+            Intent i = new Intent(this, MonthCalendarActivity.class);
+            i.putExtra("source_activity", "activity_modify_day");
+            i.putExtra("year", year);
+            i.putExtra("month", month);
+            startActivity(i);
+        }
+        else if (sourceActivity.equals("activity_view_routines") || (sourceActivity.equals("activity_modify_event") && receivedRoutineIndex != 0))
+        {
+            Intent i = new Intent(this, ViewRoutinesActivity.class);
+            i.putExtra("source_activity", "activity_modify_day");
+            startActivity(i);
+        }
     }
 }
