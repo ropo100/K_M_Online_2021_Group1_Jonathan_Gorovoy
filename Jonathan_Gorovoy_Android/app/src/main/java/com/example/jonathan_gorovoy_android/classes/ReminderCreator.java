@@ -1,5 +1,6 @@
 package com.example.jonathan_gorovoy_android.classes;
 
+import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

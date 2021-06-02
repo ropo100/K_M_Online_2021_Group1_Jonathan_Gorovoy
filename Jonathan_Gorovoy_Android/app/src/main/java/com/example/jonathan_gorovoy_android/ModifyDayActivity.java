@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.EventLog;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,10 +20,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.jonathan_gorovoy_android.adapters.EventDayViewAdapter;
+import com.example.jonathan_gorovoy_android.classes.DeadlineView;
 import com.example.jonathan_gorovoy_android.classes.EventDayView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -35,10 +39,13 @@ public class ModifyDayActivity extends AppCompatActivity {
     boolean isSpecificDay;
     boolean inPast = false;
     String sourceActivity;
+    Dal dal;
 
     ListView eventList;
     ArrayList<EventDayView> eventArray = new ArrayList<EventDayView>();
     TextView dateText;
+    ArrayList<DeadlineView> deadlineArray = new ArrayList<DeadlineView>();
+    ArrayList<String> routineArray = new ArrayList<>();
 
     int btnChoice=0;//0=add event, 1=move deadline, 2=apply routine
 
@@ -50,7 +57,7 @@ public class ModifyDayActivity extends AppCompatActivity {
         dateText = (TextView)findViewById(R.id.date);
         String dateString = "";
 
-        Dal dal = new Dal(ModifyDayActivity.this);
+        dal = new Dal(ModifyDayActivity.this);
 
         eventIndex=0;
 
@@ -197,11 +204,63 @@ public class ModifyDayActivity extends AppCompatActivity {
     }
 
     void moveDeadlineAction() {
-
+        ArrayList<String> deadlines = new ArrayList<>();
+        ArrayList<DeadlineView> futureDeadlineArray = new ArrayList<>();
+        deadlineArray = dal.getAllDeadlines();
+        Calendar deadlineCalendar = Calendar.getInstance(), today = Calendar.getInstance();
+        for(int i=0;i<deadlineArray.size();i++)
+        {
+            DeadlineView dv = deadlineArray.get(i);
+            deadlineCalendar.set(Calendar.DAY_OF_MONTH, dv.getDay());
+            deadlineCalendar.set(Calendar.MONTH, dv.getMonth()-1);
+            deadlineCalendar.set(Calendar.YEAR, dv.getYear());
+            if(today.before(deadlineCalendar)) {
+                deadlines.add(dv.getText());
+                futureDeadlineArray.add(dv);
+            }
+        }
+        ListAdapter optionListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, deadlines);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle("Choose Deadline to move here:");
+        dialogBuilder.setAdapter(optionListAdapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        DeadlineView selectedDv = futureDeadlineArray.get(item);
+                        dal.addEvent(day, month, year, selectedDv.getStartHour(), selectedDv.getEndHour(), selectedDv.getText(), selectedDv.getDescription(), 0, selectedDv.getEventIndex(), true);
+                        //update reminders
+                        ArrayList<String> reminderTexts = dal.getReminders(selectedDv.getEventIndex());
+                        for (int i = 0; i < reminderTexts.size(); i++) {
+                            String reminderText = reminderTexts.get(i);
+                            Integer amountChosen = Integer.valueOf(reminderText.substring(0, reminderText.indexOf(" ")));
+                            String unitChosen = reminderText.substring(reminderText.indexOf(" ") + 1);
+                            ModifyEventActivity.scheduleNotification(getApplicationContext(), dal, selectedDv.getEventIndex(), amountChosen, unitChosen, selectedDv.getText(), selectedDv.getDescription(), day, month, year, routineIndex, isSpecificDay, selectedDv.getStartHour());
+                        }
+                        //refresh
+                        eventArray = dal.getEventsInDay(day, month, year, routineIndex, inPast);
+                        EventDayViewAdapter edva = new EventDayViewAdapter(ModifyDayActivity.this, R.layout.event_day_view, eventArray);
+                        eventList.setAdapter(edva);
+                    }
+                });
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
     }
 
     void applyRoutineAction() {
-
+        routineArray = dal.getRoutines();
+        ListAdapter optionListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, routineArray);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle("Choose Routine to Apply:");
+        dialogBuilder.setAdapter(optionListAdapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        int selectedRoutineIndex = dal.getRoutineIndex(routineArray.get(item));
+                        new RoutineApplier(0, 0, 0, selectedRoutineIndex, false).execute();
+                    }
+                });
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
     }
 
 
@@ -245,4 +304,43 @@ public class ModifyDayActivity extends AppCompatActivity {
             startActivity(i);
         }
     }
+
+    private class RoutineApplier extends AsyncTask<Void, Void, Void> {
+
+        int rDay;
+        int rMonth;
+        int rYear;
+        int rRoutineIndex;
+        boolean rIsSpecificDay;
+
+        RoutineApplier(int day, int month, int year, int routineIndex, boolean isSpecificDay)
+        {
+            this.rDay = day;
+            this.rMonth = month;
+            this.rYear = year;
+            this.rRoutineIndex = routineIndex;
+            this.rIsSpecificDay = isSpecificDay;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ArrayList<EventDayView> routineEvents = dal.getEventsInDay(0, 0, 0, rRoutineIndex, false);
+            for(int i=0;i<routineEvents.size();i++)
+            { // doesn't copy reminders, routines cant have reminders in them since reminders i coded in a way that they are instantly scheduled when created
+                EventDayView routineEvent = routineEvents.get(i);
+                dal.addEvent(day, month, year, routineEvent.getStartHour(), routineEvent.getEndHour(), routineEvent.getTitle(), routineEvent.getDescription(), 0, 0, routineEvent.getIsDeadline());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            //refresh event list view
+            eventArray = dal.getEventsInDay(day, month, year, routineIndex, inPast);
+            EventDayViewAdapter eventDayViewAdapter = new EventDayViewAdapter(ModifyDayActivity.this, R.layout.event_day_view, eventArray);
+            eventList.setAdapter(eventDayViewAdapter);
+        }
+    }
 }
+

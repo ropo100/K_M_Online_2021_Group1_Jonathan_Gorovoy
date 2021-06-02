@@ -59,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        //do nothing - theres no where to go back to
+        //do nothing because this is the landing page
     }
 
     private void createNotificationChannel() {
