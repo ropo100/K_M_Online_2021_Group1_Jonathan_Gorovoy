@@ -1,18 +1,10 @@
 package com.example.jonathan_gorovoy_android.classes;
 
-import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.renderscript.RenderScript;
-
-import androidx.core.app.NotificationCompat;
-
-import com.example.jonathan_gorovoy_android.ModifyDayActivity;
-import com.example.jonathan_gorovoy_android.R;
 
 public class ReminderCreator extends BroadcastReceiver {
     @Override

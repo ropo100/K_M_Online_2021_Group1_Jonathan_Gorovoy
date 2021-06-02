@@ -24,7 +24,8 @@
             android:layout_height="36dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
-            android:src="@drawable/ic_arrow_left" />
+            android:src="@drawable/ic_arrow_left"
+            android:contentDescription="Left Arrow"/>
 
         <TextView
             android:id="@+id/calendarDateDisplay"
@@ -44,11 +45,11 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
             android:layout_toEndOf="@id/calendarDateDisplay"
-            android:src="@drawable/ic_arrow_right" />
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="Right Arrow"/>
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/calendarWeekdayHeader"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="center_vertical"

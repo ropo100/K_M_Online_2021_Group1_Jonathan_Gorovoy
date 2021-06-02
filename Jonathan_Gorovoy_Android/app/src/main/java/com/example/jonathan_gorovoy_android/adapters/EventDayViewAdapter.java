@@ -18,9 +18,9 @@ import java.util.List;
 
 public class EventDayViewAdapter extends ArrayAdapter<EventDayView>
 {
-    private Context ctx;
-    private int eventResourceId;
-    private List<EventDayView> data;
+    private final Context ctx;
+    private final int eventResourceId;
+    private final List<EventDayView> data;
 
     public EventDayViewAdapter(Context context, int resource, List<EventDayView> objects)
     {

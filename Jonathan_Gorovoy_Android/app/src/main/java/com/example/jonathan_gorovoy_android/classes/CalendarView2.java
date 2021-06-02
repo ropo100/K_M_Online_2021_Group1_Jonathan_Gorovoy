@@ -17,16 +17,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
+@SuppressWarnings("Convert2Lambda")
 public class CalendarView2 extends LinearLayout {
     final int DAYS_COUNT = 42; // 6 rows and 7 columns to display the weeks
-    LinearLayout header;
     ImageView btnPrev;
     ImageView btnNext;
     TextView txtDisplayDate;
     GridView gridView;
-    Calendar currentDate= Calendar.getInstance();
+    final Calendar currentDate= Calendar.getInstance();
     EventHandler eventHandler = null;
 
     public CalendarView2(Context context) {
@@ -40,6 +39,13 @@ public class CalendarView2 extends LinearLayout {
         initControl(context);
     }
 
+    public void setStartingMonth(int month, int year)
+    {
+        currentDate.set(Calendar.YEAR, year);
+        currentDate.set(Calendar.MONTH, month-1);
+        updateCalendar();
+    }
+
     private void initControl(Context context) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.calendar_view, this);
@@ -50,7 +56,6 @@ public class CalendarView2 extends LinearLayout {
 
     private void initUi() {
         // after layout inflation, connect between ids and local variables
-        header = findViewById(R.id.calendarWeekdayHeader);
         btnPrev = findViewById(R.id.calendarPrevButton);
         btnNext = findViewById(R.id.calendarNextButton);
         txtDisplayDate = findViewById(R.id.calendarDateDisplay);
@@ -81,17 +86,6 @@ public class CalendarView2 extends LinearLayout {
                     eventHandler.onDayPress((Date)parent.getItemAtPosition(position)); // call handler of day press outside class
             }
         });
-
-        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() { // long click to select 1 whole week
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if(eventHandler == null)
-                    return false;
-
-                eventHandler.onWeekLongPress((Date)parent.getItemAtPosition(position)); // call long press handler outside class
-                return true;
-            }
-        });
     }
 
     public void updateCalendar()
@@ -103,7 +97,7 @@ public class CalendarView2 extends LinearLayout {
         int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) - 1; // cell according to index of the first day in its week
         // for example if day 1 is a Sunday, index in GridView cells is 0 because its the first cell in the first row of GridView
 
-        // move calendar to the first day of the week the month starts in (useful when month doesnt start on sunday)
+        // move calendar to the first day of the week the month starts in (useful when month doesn't start on sunday)
         calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
 
         while (cells.size() < DAYS_COUNT)
@@ -129,6 +123,5 @@ public class CalendarView2 extends LinearLayout {
     public interface EventHandler
     { // interface for event handling by outside classes
         void onDayPress(Date date); // date of pressed day
-        void onWeekLongPress(Date date); // date of day clicked within the week
     }
 }

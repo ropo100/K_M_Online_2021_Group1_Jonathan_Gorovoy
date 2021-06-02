@@ -17,12 +17,11 @@ import com.example.jonathan_gorovoy_android.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class CalendarViewAdapter extends ArrayAdapter<Date> {
     // for view inflation
-    private LayoutInflater inflater;
-    private Calendar currentCalendar;
+    private final LayoutInflater inflater;
+    private final Calendar currentCalendar;
 
     public CalendarViewAdapter(Context context, ArrayList<Date> days, Calendar currentCalendar)
     {

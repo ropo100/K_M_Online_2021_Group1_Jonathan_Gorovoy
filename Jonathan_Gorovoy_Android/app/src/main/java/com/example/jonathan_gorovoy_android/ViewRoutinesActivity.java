@@ -24,9 +24,9 @@ public class ViewRoutinesActivity extends AppCompatActivity {
     int routineIndex;
 
     ListView routineList;
-    ArrayList<String> routineArray = new ArrayList<String>();
+    ArrayList<String> routineArray = new ArrayList<>();
 
-    Button btn1, btn2;
+    Button btnCreate, btnRemove;
 
     String routineText = "";
     Dal dal;
@@ -43,15 +43,14 @@ public class ViewRoutinesActivity extends AppCompatActivity {
 
         dal = new Dal(ViewRoutinesActivity.this);
 
-        btn1=(Button)findViewById(R.id.btnCreate);
-        btn2=(Button)findViewById(R.id.btnRemove);
+        btnCreate=(Button)findViewById(R.id.btnCreate);
+        btnRemove=(Button)findViewById(R.id.btnRemove);
 
         routineList = (ListView)findViewById(R.id.routineList);
-        //getRoutinesDemo();
         routineArray = dal.getRoutines();
-        ArrayAdapter<String> sa = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, routineArray);
+        ArrayAdapter<String> sa = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, routineArray);
         routineList.setAdapter(sa);
-        AdapterView.OnItemClickListener routineListListener = new AdapterView.OnItemClickListener() {
+        @SuppressWarnings("Convert2Lambda") AdapterView.OnItemClickListener routineListListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String routineName = routineArray.get(position);
@@ -59,31 +58,17 @@ public class ViewRoutinesActivity extends AppCompatActivity {
                 Intent i = new Intent(ViewRoutinesActivity.this, ModifyDayActivity.class);
                 i.putExtra("source_activity", "activity_view_routines");
                 i.putExtra("routineIndex", routineIndex);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
             }
         };
         routineList.setOnItemClickListener(routineListListener);
 
-        btn1.setOnClickListener(this::onClick);
-        btn2.setOnClickListener(this::onClick);
+        btnCreate.setOnClickListener(this::onClick);
+        btnRemove.setOnClickListener(this::onClick);
     }
-
-    private void getRoutinesDemo() {
-        String str = "Ordinary Monday";
-        routineArray.add(str);
-        str = "School Sunday";
-        routineArray.add(str);
-        str = "Free Day Saturday";
-        routineArray.add(str);
-        str = "Ordinary Thursday";
-        routineArray.add(str);
-        str = "Homework Day";
-        routineArray.add(str);
-    }
-
 
     public void onClick(View view) {
-        Intent i;
         switch(view.getId()) {
             case R.id.btnCreate:
                 //enter string dialog
@@ -92,16 +77,18 @@ public class ViewRoutinesActivity extends AppCompatActivity {
                 builder.setTitle("Create Routine");
                 routineInput.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(routineInput);
+                //noinspection Convert2Lambda
                 builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         routineText = routineInput.getText().toString();
                         dal.addRoutine(routineText);
                         routineArray = dal.getRoutines();
-                        ArrayAdapter<String> sa = new ArrayAdapter<String>(ViewRoutinesActivity.this, android.R.layout.simple_expandable_list_item_1, routineArray);
+                        ArrayAdapter<String> sa = new ArrayAdapter<>(ViewRoutinesActivity.this, android.R.layout.simple_expandable_list_item_1, routineArray);
                         routineList.setAdapter(sa);
                     }
                 });
+                //noinspection Convert2Lambda
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -113,16 +100,17 @@ public class ViewRoutinesActivity extends AppCompatActivity {
                 break;
             case R.id.btnRemove:
                 //choose routine by name and delete it
-                ListAdapter routineListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, routineArray);
+                ListAdapter routineListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, routineArray);
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
                 dialogBuilder.setTitle("Remove Routine");
+                //noinspection Convert2Lambda
                 dialogBuilder.setAdapter(routineListAdapter,
                   new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         dal.deleteRoutine(dal.getRoutineIndex(routineArray.get(item)));
                         routineArray = dal.getRoutines();
-                        ArrayAdapter<String> sa = new ArrayAdapter<String>(ViewRoutinesActivity.this, android.R.layout.simple_expandable_list_item_1, routineArray);
+                        ArrayAdapter<String> sa = new ArrayAdapter<>(ViewRoutinesActivity.this, android.R.layout.simple_expandable_list_item_1, routineArray);
                         routineList.setAdapter(sa);
                     }
                 });
@@ -134,13 +122,13 @@ public class ViewRoutinesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Intent i = new Intent(this, MainActivity.class);
-                i.putExtra("source_activity", "activity_view_routines");
-                startActivity(i);
-                return true;
+        // Respond to the action bar's Up/Home button
+        if (item.getItemId() == android.R.id.home) {
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("source_activity", "activity_view_routines");
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -150,6 +138,7 @@ public class ViewRoutinesActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("source_activity", "activity_view_routines");
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
     }
 }

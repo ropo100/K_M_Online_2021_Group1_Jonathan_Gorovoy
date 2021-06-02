@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.jonathan_gorovoy_android.adapters.DeadlineViewAdapter;
@@ -16,17 +15,14 @@ import com.example.jonathan_gorovoy_android.classes.DeadlineView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 public class ViewDeadlinesActivity extends AppCompatActivity {
 
-    int eventIndex;
-    boolean isSpecificDay;
-
     ListView deadlineList;
-    ArrayList<DeadlineView> deadlineArray = new ArrayList<DeadlineView>();
+    ArrayList<DeadlineView> deadlineArray = new ArrayList<>();
     Dal dal;
 
+    @SuppressWarnings("Convert2Lambda")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +36,6 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
         dal = new Dal(ViewDeadlinesActivity.this);
 
         deadlineList = (ListView)findViewById(R.id.deadlineList);
-        //getDeadlinesDemo();
         deadlineArray = dal.getAllDeadlines();
         DeadlineViewAdapter dva = new DeadlineViewAdapter(this, R.layout.deadline_view, deadlineArray);
         deadlineList.setAdapter(dva);
@@ -62,44 +57,12 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
                 i.putExtra("eventIndex", item.getEventIndex());
                 i.putExtra("inPast", determineIsInPast(item.getDay(), item.getMonth(), item.getYear()));
                 i.putExtra("isDeadline", true);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
             }
         };
         deadlineList.setOnItemClickListener(deadlineListListener);
 
-    }
-
-    /*private void getDeadlinesDemo() {
-        DeadlineView dv = new DeadlineView("Safrut work", "17/12/2020");
-        deadlineArray.add(dv);
-        dv = new DeadlineView("Math test", "29/12/2020");
-        deadlineArray.add(dv);
-        dv = new DeadlineView("Physics lab", "04/01/2021");
-        deadlineArray.add(dv);
-        dv = new DeadlineView("Learn for ezrahut test", "14/01/2021");
-        deadlineArray.add(dv);
-        dv = new DeadlineView("Birthday", "20/02/2021");
-        deadlineArray.add(dv);
-        dv = new DeadlineView("Math bagrut", "19/04/2021");
-        deadlineArray.add(dv);
-    }*/
-
-    public void onClick(View view) {
-        /*Intent i;
-        switch(view.getId()) {
-            case R.id.button71:
-                i = new Intent(this, MainActivity.class);
-                i.putExtra("source_activity", "activity_view_deadlines");
-                startActivity(i);
-                break;
-            case R.id.button72:
-                i = new Intent(this, ModifyEventActivity.class);
-                i.putExtra("source_activity", "activity_view_deadlines");
-                i.putExtra("eventIndex", eventIndex);
-                i.putExtra("isSpecificDay", isSpecificDay);
-                startActivity(i);
-                break;
-        }*/
     }
 
     boolean determineIsInPast(int day, int month, int year)
@@ -111,13 +74,13 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Intent i = new Intent(this, MainActivity.class);
-                i.putExtra("source_activity", "activity_view_deadlines");
-                startActivity(i);
-                return true;
+        // Respond to the action bar's Up/Home button
+        if (item.getItemId() == android.R.id.home) {
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("source_activity", "activity_view_deadlines");
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -127,6 +90,7 @@ public class ViewDeadlinesActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("source_activity", "activity_view_deadlines");
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
     }
 }

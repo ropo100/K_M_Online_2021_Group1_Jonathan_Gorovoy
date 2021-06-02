@@ -1,16 +1,13 @@
 package com.example.jonathan_gorovoy_android;
 
 
-import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.widget.Toast;
 
 import com.example.jonathan_gorovoy_android.classes.DeadlineView;
 import com.example.jonathan_gorovoy_android.classes.EventDayView;
-import com.example.jonathan_gorovoy_android.classes.ReminderCreator;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
@@ -62,27 +59,6 @@ public class Dal extends SQLiteAssetHelper{
         db.close();
     }
 
-    public void addDeadline(int dueDay, int dueMonth, int dueYear, int eventIndex) {
-        SQLiteDatabase db = getWritableDatabase();
-        SQLiteStatement statement;
-        if(isDeadline(eventIndex)) {
-            String sql_INSERT = "INSERT INTO deadlines (dueDay, dueMonth, dueYear, eventIndex) values (?,?,?,?)";
-            statement = db.compileStatement(sql_INSERT);
-        }
-        else
-        {
-            String sql_UPDATE = "UPDATE deadlines SET dueDay=?, dueMonth=?, dueYear=? WHERE eventIndex=?";
-            statement = db.compileStatement(sql_UPDATE);
-        }
-
-        statement.bindLong(1, dueDay);
-        statement.bindLong(2, dueMonth);
-        statement.bindLong(3, dueYear);
-        statement.bindLong(4, eventIndex);
-        statement.execute();
-        db.close();
-    }
-
     public void addReminder(int reminderId, int eventIndex, Integer amountChosen, String unitChosen)
     {
         boolean wouldBeDuplicate = reminderId == 0 && getReminderIndex(eventIndex, amountChosen, unitChosen) != 0;
@@ -105,25 +81,6 @@ public class Dal extends SQLiteAssetHelper{
             statement.execute();
         }
         db.close();
-    }
-
-    public EventDayView getEvent(int eventIndex)
-    {
-        String st = "SELECT * FROM events WHERE id="+eventIndex;
-        SQLiteDatabase db = getWritableDatabase();
-        Cursor cursor = db.rawQuery(st, null);
-        EventDayView event = null;
-        while(cursor.moveToNext()) {
-            String startHour = cursor.getString(cursor.getColumnIndex("startHour"));
-            String endHour = cursor.getString(cursor.getColumnIndex("endHour"));
-            String title = cursor.getString(cursor.getColumnIndex("title"));
-            String description = cursor.getString(cursor.getColumnIndex("description"));
-            boolean isDeadline = cursor.getInt(cursor.getColumnIndex("isDeadline")) != 0;
-            event = new EventDayView(startHour, endHour, title, description, eventIndex, isDeadline);
-        }
-        cursor.close();
-        db.close();
-        return event;
     }
 
     public String getRoutineName(int routineIndex)
@@ -152,17 +109,6 @@ public class Dal extends SQLiteAssetHelper{
         cursor.close();
         db.close();
         return id;
-    }
-
-    public boolean isDeadline(int eventIndex)
-    {
-        String st = "SELECT isDeadline FROM events WHERE id="+eventIndex;
-        SQLiteDatabase db = getWritableDatabase();
-        Cursor cursor = db.rawQuery(st, null);
-        boolean found = cursor.getInt(cursor.getColumnIndex("isDeadline")) != 0;
-        cursor.close();
-        db.close();
-        return found;
     }
 
     public int getReminderIndex(int eventIndex, Integer amount, String unit)

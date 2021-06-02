@@ -1,27 +1,18 @@
 <resources>
     <string name="app_name">Daily Routine Manager</string>
-    <string name="main_screen">Welcome Screen</string>
-    <string name="modify_day_screen">Modify/View Day Screen</string>
-    <string name="modify_event_screen">Modify/View Event Screen</string>
-    <string name="modify_routine_screen">Modify/View Daily Routine Screen</string>
-    <string name="month_calendar_screen">Monthly Calendar Screen</string>
-    <string name="past_day_screen">Past Day Screen</string>
-    <string name="settings_screen">Settings Screen</string>
-    <string name="view_deadlines_screen">View Deadlines Screen</string>
-    <string name="view_routines_screen">View Daily Routines Screen</string>
-    <string name="week_calendar_screen">Weekly Calendar Screen</string>
+    <string name="month_calendar_screen">Calendar</string>
+    <string name="view_deadlines_screen">View Deadlines</string>
+    <string name="view_routines_screen">View Daily Routines</string>
 
     <string name="notifChannelName">Daily Routine Manager</string>
     <string name="notifChannelDesc">Reminders for tasks</string>
-    <string name="notifChannelId">dtm_reminder</string>
+    <string name="notifChannelId">drm_reminder</string>
 
     <string name="welcome_msg">Welcome to your Daily Routine Manager</string>
     <string name="titleText">Title:</string>
     <string name="descriptionText">Description:</string>
     <string name="eventStartText">Start time:</string>
     <string name="eventEndText">End time:</string>
-    <string name="eventDueText">Due date:</string>
-    <string name="settingsText">Settings</string>
     <string name="toInBetween">to</string>
     <string name="multiUseApply">Apply</string>
     <string name="delete">Delete</string>
@@ -35,6 +26,5 @@
     <string name="hintDescription">Description</string>
     <string name="hintStartHour">00:00</string>
     <string name="hintEndHour">00:00</string>
-    <string name="hintDeadline">DD/MM/YYYY</string>
 
 </resources>

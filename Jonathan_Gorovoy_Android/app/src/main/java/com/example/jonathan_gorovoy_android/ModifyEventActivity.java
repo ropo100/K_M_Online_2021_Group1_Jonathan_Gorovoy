@@ -7,7 +7,6 @@ import androidx.core.app.NotificationCompat;
 
 import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +14,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.util.Range;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,23 +23,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
-import com.example.jonathan_gorovoy_android.classes.EventDayView;
 import com.example.jonathan_gorovoy_android.classes.ReminderCreator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Dictionary;
-import java.util.TimeZone;
-import java.util.stream.IntStream;
 
+@SuppressWarnings("ALL")
 public class ModifyEventActivity extends AppCompatActivity {
 
-    Button btn1, btn2, btn3;
+    Button btnApply, btnDelete, btnShowReminders;
     int year=0, month=0, day=0, eventIndex=0, routineIndex=0;
     boolean isSpecificDay=true, isDeadline=false, inPast = false;
     String title="", description="", startHour="", endHour="";
@@ -53,9 +47,9 @@ public class ModifyEventActivity extends AppCompatActivity {
     InputFilter filterHour; // filter for 00:00-23:59 input
     boolean doneOnce = false;
 
-    ArrayList<String> reminderArray = new ArrayList<String>();
-    Integer[] amountRange = {0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 40, 45, 50, 55, 60, 90};
-    String[] units = {"minutes", "hours", "days", "weeks"};
+    ArrayList<String> reminderArray = new ArrayList<>();
+    final Integer[] amountRange = {0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 40, 45, 50, 55, 60, 90};
+    final String[] units = {"minutes", "hours", "days", "weeks"};
     Integer amountChosen = 1;
     String unitChosen = "minutes";
     int reminderId = 0;
@@ -102,13 +96,13 @@ public class ModifyEventActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        btn1=(Button)findViewById(R.id.btnApply);
-        btn2=(Button)findViewById(R.id.btnDelete);
-        btn3=(Button)findViewById(R.id.btnShowReminders);
+        btnApply =(Button)findViewById(R.id.btnApply);
+        btnDelete =(Button)findViewById(R.id.btnDelete);
+        btnShowReminders =(Button)findViewById(R.id.btnShowReminders);
 
-        btn1.setOnClickListener(this::onClick);
-        btn2.setOnClickListener(this::onClick);
-        btn3.setOnClickListener(this::onClick);
+        btnApply.setOnClickListener(this::onClick);
+        btnDelete.setOnClickListener(this::onClick);
+        btnShowReminders.setOnClickListener(this::onClick);
 
         if(inPast)
         {
@@ -117,8 +111,8 @@ public class ModifyEventActivity extends AppCompatActivity {
             editStartHour.setEnabled(false);
             editEndHour.setEnabled(false);
             deadlineCheckbox.setEnabled(false);
-            btn2.setEnabled(false);
-            btn1.setText("OK");
+            btnDelete.setEnabled(false);
+            btnApply.setText("OK");
         }
 
         createTimeFilter();
@@ -131,26 +125,44 @@ public class ModifyEventActivity extends AppCompatActivity {
         switch(view.getId())
         {
             case R.id.btnApply:
+                boolean noErrors=true;
                 if(!inPast) {
                     startHour = editStartHour.getText().toString();
                     endHour = editEndHour.getText().toString();
                     title = editTitle.getText().toString();
                     description = editDescription.getText().toString();
                     isDeadline = deadlineCheckbox.isChecked();
-                    dal.addEvent(day, month, year, startHour, endHour, title, description, routineIndex, eventIndex, isDeadline);
-                    if(eventIndex != 0) { // update all the notifications if this is not a new event
-                        //for the purpose of accommodating for changes to title or start hour
-                        ArrayList<String> reminderTexts = dal.getReminders(eventIndex);
-                        for (int i = 0; i < reminderTexts.size(); i++) {
-                            String reminderText = reminderTexts.get(i);
-                            amountChosen = Integer.valueOf(reminderText.substring(0, reminderText.indexOf(" ")));
-                            unitChosen = reminderText.substring(reminderText.indexOf(" ") + 1);
-                            scheduleNotification(getApplicationContext(), dal, eventIndex, amountChosen, unitChosen, title, description, day, month, year, routineIndex, isSpecificDay, startHour);
+                    noErrors=false;
+                    if(title.isEmpty())
+                    {
+                        Toast.makeText(this, "Title can't be empty!", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(startHour.length() != 5 || endHour.length() != 5)
+                    {
+                        Toast.makeText(this, "You must enter start and end hours!", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(startHour.compareTo(endHour)>0)
+                    {
+                        Toast.makeText(this, "End hour must be after start hour!", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        noErrors=true;
+                        dal.addEvent(day, month, year, startHour, endHour, title, description, routineIndex, eventIndex, isDeadline);
+                        if (eventIndex != 0) { // update all the notifications if this is not a new event
+                            //for the purpose of accommodating for changes to title or start hour
+                            ArrayList<String> reminderTexts = dal.getReminders(eventIndex);
+                            for (int i = 0; i < reminderTexts.size(); i++) {
+                                String reminderText = reminderTexts.get(i);
+                                amountChosen = Integer.valueOf(reminderText.substring(0, reminderText.indexOf(" ")));
+                                unitChosen = reminderText.substring(reminderText.indexOf(" ") + 1);
+                                scheduleNotification(getApplicationContext(), dal, eventIndex, amountChosen, unitChosen, title, description, day, month, year, routineIndex, isSpecificDay, startHour);
+                            }
                         }
-
                     }
                 }
-                finishAndReturn();
+                if(noErrors) {
+                    finishAndReturn();
+                }
                 break;
             case R.id.btnDelete:
                 ArrayList<String> reminderTexts = dal.getReminders(eventIndex);
@@ -177,11 +189,12 @@ public class ModifyEventActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("Convert2Lambda")
     void viewReminders() {
         //cant add reminders to an event before it exists
         if(eventIndex != 0) {
             reminderArray = dal.getReminders(eventIndex);
-            ListAdapter reminderAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, reminderArray);
+            ListAdapter reminderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, reminderArray);
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             dialogBuilder.setTitle("Current Reminders:");
             dialogBuilder.setAdapter(reminderAdapter,
@@ -210,6 +223,7 @@ public class ModifyEventActivity extends AppCompatActivity {
                     }
                 });
             }
+            //noinspection Convert2Lambda,Convert2Lambda
             dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -278,11 +292,10 @@ public class ModifyEventActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                finishAndReturn();
-                return true;
+        // Respond to the action bar's Up/Home button
+        if (item.getItemId() == android.R.id.home) {
+            finishAndReturn();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -306,18 +319,21 @@ public class ModifyEventActivity extends AppCompatActivity {
             i.putExtra("year",year);
             i.putExtra("routineIndex",routineIndex);
             i.putExtra("isSpecificDay", isSpecificDay);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         }
         else if(sourceActivity.equals("activity_view_deadlines"))
         {
             i = new Intent(this, ViewDeadlinesActivity.class);
             i.putExtra("source_activity", "activity_modify_event");
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         }
         else
         {
             i = new Intent(this, MainActivity.class);
             i.putExtra("source_activity", "activity_modify_event");
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         }
     }
@@ -334,7 +350,7 @@ public class ModifyEventActivity extends AppCompatActivity {
                 .setAutoCancel(true)
                 .setOngoing(false)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setSmallIcon(R.drawable.ic_launcher_foreground);
+                .setSmallIcon(R.mipmap.ic_launcher);
 
         Intent destination = new Intent(context, ModifyDayActivity.class);
         destination.putExtra("source_activity", "activity_modify_event");

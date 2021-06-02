@@ -16,9 +16,9 @@ import com.example.jonathan_gorovoy_android.R;
 import java.util.List;
 
 public class DeadlineViewAdapter extends ArrayAdapter<DeadlineView> {
-    private Context ctx;
-    private int eventResourceId;
-    private List<DeadlineView> data;
+    private final Context ctx;
+    private final int eventResourceId;
+    private final List<DeadlineView> data;
 
     public DeadlineViewAdapter(Context context, int resource, List<DeadlineView> objects)
     {
