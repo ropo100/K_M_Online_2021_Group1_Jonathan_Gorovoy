@@ -11,6 +11,10 @@
     <string name="view_routines_screen">View Daily Routines Screen</string>
     <string name="week_calendar_screen">Weekly Calendar Screen</string>
 
+    <string name="notifChannelName">Daily Task Manager</string>
+    <string name="notifChannelDesc">Reminders for tasks</string>
+    <string name="notifChannelId">dtm_reminder</string>
+
     <string name="welcome_msg">Welcome to your Daily Routine Manager</string>
     <string name="titleText">Title:</string>
     <string name="descriptionText">Description:</string>

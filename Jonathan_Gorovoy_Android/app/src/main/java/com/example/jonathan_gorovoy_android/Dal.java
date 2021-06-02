@@ -1,6 +1,7 @@
 package com.example.jonathan_gorovoy_android;
 
 
+import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.jonathan_gorovoy_android.classes.DeadlineView;
 import com.example.jonathan_gorovoy_android.classes.EventDayView;
+import com.example.jonathan_gorovoy_android.classes.ReminderCreator;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
@@ -81,7 +83,9 @@ public class Dal extends SQLiteAssetHelper{
         db.close();
     }
 
-    public void addReminder(int reminderId, int eventIndex, Integer amountChosen, String unitChosen) {
+    public void addReminder(int reminderId, int eventIndex, Integer amountChosen, String unitChosen)
+    {
+        boolean wouldBeDuplicate = reminderId == 0 && getReminderIndex(eventIndex, amountChosen, unitChosen) != 0;
         SQLiteDatabase db = getWritableDatabase();
         SQLiteStatement statement;
         if(reminderId == 0) {
@@ -94,11 +98,32 @@ public class Dal extends SQLiteAssetHelper{
             statement = db.compileStatement(sql_UPDATE);
         }
 
-        statement.bindLong(1, eventIndex);
-        statement.bindLong(2, amountChosen);
-        statement.bindString(3, unitChosen);
-        statement.execute();
+        if(!wouldBeDuplicate) {
+            statement.bindLong(1, eventIndex);
+            statement.bindLong(2, amountChosen);
+            statement.bindString(3, unitChosen);
+            statement.execute();
+        }
         db.close();
+    }
+
+    public EventDayView getEvent(int eventIndex)
+    {
+        String st = "SELECT * FROM events WHERE id="+eventIndex;
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery(st, null);
+        EventDayView event = null;
+        while(cursor.moveToNext()) {
+            String startHour = cursor.getString(cursor.getColumnIndex("startHour"));
+            String endHour = cursor.getString(cursor.getColumnIndex("endHour"));
+            String title = cursor.getString(cursor.getColumnIndex("title"));
+            String description = cursor.getString(cursor.getColumnIndex("description"));
+            boolean isDeadline = cursor.getInt(cursor.getColumnIndex("isDeadline")) != 0;
+            event = new EventDayView(startHour, endHour, title, description, eventIndex, isDeadline);
+        }
+        cursor.close();
+        db.close();
+        return event;
     }
 
     public String getRoutineName(int routineIndex)

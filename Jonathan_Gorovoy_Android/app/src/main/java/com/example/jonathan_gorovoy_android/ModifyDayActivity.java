@@ -23,6 +23,7 @@ import com.example.jonathan_gorovoy_android.classes.EventDayView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class ModifyDayActivity extends AppCompatActivity {
 

@@ -3,7 +3,13 @@ package com.example.jonathan_gorovoy_android;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,12 +26,17 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import com.example.jonathan_gorovoy_android.classes.EventDayView;
+import com.example.jonathan_gorovoy_android.classes.ReminderCreator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Dictionary;
+import java.util.TimeZone;
 import java.util.stream.IntStream;
 
 public class ModifyEventActivity extends AppCompatActivity {
@@ -43,10 +54,10 @@ public class ModifyEventActivity extends AppCompatActivity {
     boolean doneOnce = false;
 
     ArrayList<String> reminderArray = new ArrayList<String>();
-    Integer[] amountRange = {1, 2, 3, 5, 10, 15, 20, 25, 30, 40, 45, 50, 55, 60, 90};
+    Integer[] amountRange = {0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 40, 45, 50, 55, 60, 90};
     String[] units = {"minutes", "hours", "days", "weeks"};
     Integer amountChosen = 1;
-    String unitChosen = "hours";
+    String unitChosen = "minutes";
     int reminderId = 0;
 
     @Override
@@ -61,8 +72,6 @@ public class ModifyEventActivity extends AppCompatActivity {
         editStartHour = (EditText)findViewById(R.id.eventStartTime);
         editEndHour = (EditText)findViewById(R.id.eventEndTime);
         deadlineCheckbox = (CheckBox)findViewById(R.id.isDeadlineCheckbox);
-
-
 
         Intent intent = getIntent();
         sourceActivity = intent.getStringExtra("source_activity");
@@ -129,10 +138,30 @@ public class ModifyEventActivity extends AppCompatActivity {
                     description = editDescription.getText().toString();
                     isDeadline = deadlineCheckbox.isChecked();
                     dal.addEvent(day, month, year, startHour, endHour, title, description, routineIndex, eventIndex, isDeadline);
+                    if(eventIndex != 0) { // update all the notifications if this is not a new event
+                        //for the purpose of accommodating for changes to title or start hour
+                        ArrayList<String> reminderTexts = dal.getReminders(eventIndex);
+                        for (int i = 0; i < reminderTexts.size(); i++) {
+                            String reminderText = reminderTexts.get(i);
+                            amountChosen = Integer.valueOf(reminderText.substring(0, reminderText.indexOf(" ")));
+                            unitChosen = reminderText.substring(reminderText.indexOf(" ") + 1);
+                            scheduleNotification();
+                        }
+
+                    }
                 }
                 finishAndReturn();
                 break;
             case R.id.btnDelete:
+                ArrayList<String> reminderTexts = dal.getReminders(eventIndex);
+                for(int i=0;i<reminderTexts.size();i++) {
+                    String reminderText = reminderTexts.get(i);
+                    amountChosen = Integer.valueOf(reminderText.substring(0, reminderText.indexOf(" ")));
+                    unitChosen = reminderText.substring(reminderText.indexOf(" ") + 1);
+                    reminderId = dal.getReminderIndex(eventIndex, amountChosen, unitChosen);
+                    deleteNotification();
+                    dal.deleteReminder(reminderId);
+                }
                 dal.deleteEvent(eventIndex);
                 finishAndReturn();
                 break;
@@ -143,46 +172,51 @@ public class ModifyEventActivity extends AppCompatActivity {
     }
 
     void viewReminders() {
-        //important: if eventIndex == 0 (newly created event) show toast that you cant add reminders to an event before it exists
+        //cant add reminders to an event before it exists
+        if(eventIndex != 0) {
+            reminderArray = dal.getReminders(eventIndex);
+            ListAdapter reminderAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, reminderArray);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setTitle("Current Reminders:");
+            dialogBuilder.setAdapter(reminderAdapter,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int item) {
+                            if (!inPast) {
+                                String reminderText = reminderArray.get(item);
+                                amountChosen = Integer.valueOf(reminderText.substring(0, reminderText.indexOf(" ")));
+                                unitChosen = reminderText.substring(reminderText.indexOf(" ") + 1);
+                                reminderId = dal.getReminderIndex(eventIndex, amountChosen, unitChosen);
 
-        reminderArray = dal.getReminders(eventIndex);
-        ListAdapter reminderAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, reminderArray);
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle("Current Reminders:");
-        dialogBuilder.setAdapter(reminderAdapter,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        if(!inPast) {
-                            String reminderText = reminderArray.get(item);
-                            amountChosen = Integer.valueOf(reminderText.substring(0, reminderText.indexOf(" ")));
-                            unitChosen = reminderText.substring(reminderText.indexOf(" ")+1);
-                            reminderId = dal.getReminderIndex(eventIndex, amountChosen, unitChosen);
-
-                            displayReminder();
+                                displayReminder();
+                            }
                         }
+                    });
+            if (!inPast) {
+                dialogBuilder.setNeutralButton("Add Reminder", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reminderId = 0;
+                        amountChosen = amountRange[1];
+                        unitChosen = units[0];
+
+                        displayReminder();
                     }
                 });
-        if(!inPast) {
-            dialogBuilder.setNeutralButton("Add Reminder", new DialogInterface.OnClickListener() {
+            }
+            dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    reminderId = 0;
-                    amountChosen = amountRange[0];
-                    unitChosen = units[1];
-
-                    displayReminder();
+                    dialog.cancel();
                 }
             });
+            AlertDialog dialog = dialogBuilder.create();
+            dialog.show();
         }
-        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
+        else
+        {
+            Toast.makeText(this, "Cannot add Reminders to an event before creating it", Toast.LENGTH_LONG).show();
+        }
     }
 
     void displayReminder() {
@@ -217,6 +251,7 @@ public class ModifyEventActivity extends AppCompatActivity {
                 amountChosen = (Integer)amountSpinner.getSelectedItem();
                 unitChosen = (String)unitSpinner.getSelectedItem();
                 dal.addReminder(reminderId, eventIndex, amountChosen, unitChosen);
+                scheduleNotification();
                 dialog.cancel();
             }
         });
@@ -225,6 +260,7 @@ public class ModifyEventActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if(reminderId != 0)
                 {
+                    deleteNotification();
                     dal.deleteReminder(reminderId);
                 }
                 dialog.cancel();
@@ -278,6 +314,87 @@ public class ModifyEventActivity extends AppCompatActivity {
             i.putExtra("source_activity", "activity_modify_event");
             startActivity(i);
         }
+    }
+
+    private void scheduleNotification()
+    {
+        reminderId=dal.getReminderIndex(eventIndex, amountChosen, unitChosen);
+        int notificationId = Integer.parseInt(1212 + "" + reminderId);
+        Context context = getApplicationContext();
+
+        NotificationCompat.Builder reminderBuilder = new NotificationCompat.Builder(context, context.getString(R.string.notifChannelId))
+                .setContentTitle(amountChosen != 0 ? (amountChosen + " " + (amountChosen != 1 ? unitChosen : unitChosen.substring(0, unitChosen.length()-1)) + " until " + title + " starts") : title + " is starting now")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(description))
+                .setAutoCancel(true)
+                .setOngoing(false)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setSmallIcon(R.drawable.ic_launcher_foreground);
+
+        Intent destination = new Intent(context, ModifyDayActivity.class);
+        destination.putExtra("source_activity", "activity_modify_event");
+        destination.putExtra("day", day);
+        destination.putExtra("month", month);
+        destination.putExtra("year",year);
+        destination.putExtra("routineIndex",routineIndex);
+        destination.putExtra("isSpecificDay", isSpecificDay);
+        destination.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingDestination = PendingIntent.getActivity(context, notificationId, destination, PendingIntent.FLAG_CANCEL_CURRENT);
+        reminderBuilder.setContentIntent(pendingDestination);
+        Notification reminder = reminderBuilder.build();
+
+        Intent receiverIntent = new Intent(context, ReminderCreator.class);
+        receiverIntent.putExtra("notificationVar", reminder);
+        receiverIntent.putExtra("notificationId", notificationId);
+        PendingIntent scheduledReceive = PendingIntent.getBroadcast(context, notificationId, receiverIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Calendar eventStartCalendar = Calendar.getInstance();
+        Date today = eventStartCalendar.getTime();
+        eventStartCalendar.set(Calendar.YEAR, year);
+        eventStartCalendar.set(Calendar.MONTH, month-1);
+        eventStartCalendar.set(Calendar.DAY_OF_MONTH, day);
+        eventStartCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startHour.substring(0, startHour.indexOf(':'))));
+        eventStartCalendar.set(Calendar.MINUTE, Integer.parseInt(startHour.substring(startHour.indexOf(':')+1)));
+        eventStartCalendar.set(Calendar.SECOND, 0);
+        int unitType = 0;
+        switch(unitChosen)
+        {
+            case "minutes":
+                unitType = Calendar.MINUTE;
+                break;
+            case "hours":
+                unitType = Calendar.HOUR;
+                break;
+            case "days":
+                unitType = Calendar.DAY_OF_MONTH;
+                break;
+            case "weeks":
+                unitType = Calendar.WEEK_OF_MONTH;
+                break;
+        }
+        eventStartCalendar.add(unitType, -amountChosen);
+
+        Date whenToNotify = eventStartCalendar.getTime(); //should calculate again after subtracting the amount
+        if(today.before(whenToNotify)) { //only notify if the notification time will be in the future and not in the past
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, whenToNotify.getTime(), scheduledReceive);
+        }
+        else
+        {
+            deleteNotification();
+        }
+    }
+
+    private void deleteNotification()
+    {
+        int notificationId = Integer.parseInt(1212 + "" + reminderId);
+        Context context = getApplicationContext();
+
+        Intent receiverIntent = new Intent(context, ReminderCreator.class);
+        receiverIntent.putExtra("notificationId", notificationId);
+        PendingIntent scheduledReceive = PendingIntent.getBroadcast(context, notificationId, receiverIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(scheduledReceive);
     }
 
     private void createTimeFilter() {

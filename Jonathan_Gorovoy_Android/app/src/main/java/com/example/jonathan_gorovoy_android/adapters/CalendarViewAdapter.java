@@ -17,6 +17,7 @@ import com.example.jonathan_gorovoy_android.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class CalendarViewAdapter extends ArrayAdapter<Date> {
     // for view inflation

@@ -16,6 +16,7 @@ import com.example.jonathan_gorovoy_android.classes.DeadlineView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 public class ViewDeadlinesActivity extends AppCompatActivity {
 

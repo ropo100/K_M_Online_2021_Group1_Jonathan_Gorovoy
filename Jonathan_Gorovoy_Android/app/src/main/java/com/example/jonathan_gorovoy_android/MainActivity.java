@@ -2,7 +2,10 @@ package com.example.jonathan_gorovoy_android;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        createNotificationChannel();
+
         btn1=(Button)findViewById(R.id.btnSettings);
         btn2=(Button)findViewById(R.id.btnDeadlines);
         btn3=(Button)findViewById(R.id.btnRoutines);
@@ -55,5 +61,17 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         //do nothing - theres no where to go back to
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { //if api level is the one that requires a channel
+            CharSequence name = getString(R.string.notifChannelName);
+            String description = getString(R.string.notifChannelDesc);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(getString(R.string.notifChannelId), name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class CalendarView2 extends LinearLayout {
     final int DAYS_COUNT = 42; // 6 rows and 7 columns to display the weeks
