@@ -1,3 +1,30 @@
 <resources>
-    <string name="app_name">Jonathan_Gorovoy_Android</string>
+    <string name="app_name">Daily Routine Manager</string>
+    <string name="month_calendar_screen">Calendar</string>
+    <string name="view_deadlines_screen">View Deadlines</string>
+    <string name="view_routines_screen">View Daily Routines</string>
+
+    <string name="notifChannelName">Daily Routine Manager</string>
+    <string name="notifChannelDesc">Reminders for tasks</string>
+    <string name="notifChannelId">drm_reminder</string>
+
+    <string name="welcome_msg">Welcome to your Daily Routine Manager</string>
+    <string name="titleText">Title:</string>
+    <string name="descriptionText">Description:</string>
+    <string name="eventStartText">Start time:</string>
+    <string name="eventEndText">End time:</string>
+    <string name="toInBetween">to</string>
+    <string name="multiUseApply">Apply</string>
+    <string name="delete">Delete</string>
+    <string name="addEvent">+</string>
+    <string name="createRoutine">Create</string>
+    <string name="removeRoutine">Remove</string>
+    <string name="checkboxText">Deadline</string>
+    <string name="showReminders">Show Reminders</string>
+
+    <string name="hintTitle">Title</string>
+    <string name="hintDescription">Description</string>
+    <string name="hintStartHour">00:00</string>
+    <string name="hintEndHour">00:00</string>
+
 </resources>

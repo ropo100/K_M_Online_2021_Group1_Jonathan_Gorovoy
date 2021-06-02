@@ -8,14 +8,22 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Jonathan_Gorovoy_Android">
-        <activity android:name=".MainActivity">
+        android:theme="@style/Theme.Jonathan_Gorovoy_Android"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <activity android:name=".ModifyEventActivity" android:label="Modify Event" />
+        <activity android:name=".ModifyDayActivity" android:label="Modify Day" />
+        <activity android:name=".MonthCalendarActivity" android:label="Monthly Calendar" />
+        <activity android:name=".ViewRoutinesActivity" android:label="Routines" />
+        <activity android:name=".ViewDeadlinesActivity" android:label="Deadlines" />
+        <activity android:name=".MainActivity" android:label="Daily Routine Manager" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".classes.ReminderCreator" />
     </application>
 
 </manifest>
